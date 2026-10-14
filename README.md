@@ -22,15 +22,50 @@
 
 </div>
 
-## 👥 Зоны ответственности команды (4 пары + Тимлид)
+<div align="center">
 
-| Направление | Ветка | Основные файлы | Задачи |
-|---|---|---|---|
-| 👑 **Team Lead** | `develop`, `main` | `templates/index.html`, PR | Архитектура, код-ревью, слияние веток, верстка HTML |
-| 🛠️ **Пара 1: Оборудование** | `feature/equipment` | `routers/equipment.py` | CRUD инструментов, проверка инв. номера, фильтры |
-| 👤 **Пара 2: Клиенты** | `feature/clients` | `routers/clients.py` | База клиентов, уникальность номеров, поиск |
-| 📅 **Пара 3: Аренды** | `feature/rentals` | `routers/rentals.py`, `services.py` | Проверка дат, расчет стоимости, смена статусов |
-| 👔 **Пара 4: Сотрудники / Доступ** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
+## 🗂️ *team dashboard • зоны ответственности*
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>👑 Team Lead</h3>
+      <img src="https://img.shields.io/badge/branch-main%20%7C%20develop-000000?style=for-the-badge&logo=git&logoColor=white" alt="Branch"/><br/><br/>
+      <b>📁 Файлы:</b> <code>templates/index.html</code>, <code>PRs</code><br/>
+      <b>🎯 Задачи:</b> Архитектура, верстка HTML, код-ревью и слияние веток
+    </td>
+    <td width="50%" valign="top">
+      <h3>🛠️ Пара 1: Оборудование</h3>
+      <img src="https://img.shields.io/badge/branch-feature%2Fequipment-000000?style=for-the-badge&logo=git&logoColor=white" alt="Branch"/><br/><br/>
+      <b>📁 Файлы:</b> <code>routers/equipment.py</code><br/>
+      <b>🎯 Задачи:</b> CRUD инструментов, проверка инв. номеров, фильтрация
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>👤 Пара 2: Клиенты</h3>
+      <img src="https://img.shields.io/badge/branch-feature%2Fclients-000000?style=for-the-badge&logo=git&logoColor=white" alt="Branch"/><br/><br/>
+      <b>📁 Файлы:</b> <code>routers/clients.py</code><br/>
+      <b>🎯 Задачи:</b> База клиентов, уникальность номеров, поиск
+    </td>
+    <td width="50%" valign="top">
+      <h3>📅 Пара 3: Аренды</h3>
+      <img src="https://img.shields.io/badge/branch-feature%2Frentals-000000?style=for-the-badge&logo=git&logoColor=white" alt="Branch"/><br/><br/>
+      <b>📁 Файлы:</b> <code>routers/rentals.py</code>, <code>services.py</code><br/>
+      <b>🎯 Задачи:</b> Проверка дат, расчет стоимости, смена статусов
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top">
+      <h3>👔 Пара 4: Сотрудники / Доступ</h3>
+      <img src="https://img.shields.io/badge/branch-feature%2Femployers-000000?style=for-the-badge&logo=git&logoColor=white" alt="Branch"/><br/><br/>
+      <b>📁 Файлы:</b> <code>routers/employers.py</code><br/>
+      <b>🎯 Задачи:</b> Учет менеджеров, роли, авторизация и доступы
+    </td>
+  </tr>
+</table>
+
+</div>
 
 ---
 
