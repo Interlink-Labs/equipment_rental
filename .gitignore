@@ -11,7 +11,7 @@ __pycache__/
 # База данных SQLite (чтобы не заливать локальный тестовый файл в Git!)
 *.db
 *.sqlite3
-renttool.db
+equipment_rental.db
 
 # Настройки IDE / Редакторов
 .vscode/

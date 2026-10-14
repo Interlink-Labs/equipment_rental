@@ -1,9 +1,10 @@
-# 🛠️ RentTool — Система учета аренды оборудования
+# 🛠️ Equipment Rental — Система учета аренды оборудования
 
 Простой и понятный учебный проект для команды из 8 разработчиков.
+Проект на GitHub Projects: [Interlink-Labs / equipment_rental](https://github.com/orgs/Interlink-Labs/projects/6)
 
 - **Backend:** Python + FastAPI
-- **База данных:** SQLite (хранится в одном локальном файле `renttool.db`)
+- **База данных:** SQLite (хранится в одном локальном файле `equipment_rental.db`)
 - **ORM:** SQLAlchemy 2.0
 - **Frontend:** Чистый HTML5 + CSS3 + Vanilla JavaScript
 - **API Документация:** Swagger UI (доступна из коробки!)
@@ -60,7 +61,7 @@ uvicorn main:app --reload
 ## 📁 Структура папок
 
 ```text
-renttool/
+equipment_rental/
 ├── main.py              # Запуск FastAPI приложения и объединение маршрутов
 ├── database.py          # Подключение к файлу SQLite
 ├── models.py            # Модели таблиц базы данных (Equipment, Client, Rental)

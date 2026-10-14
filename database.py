@@ -4,8 +4,8 @@ database.py — Настройка подключения к базе данны
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# Адрес базы данных: локальный файл renttool.db в корне проекта
-SQLALCHEMY_DATABASE_URL = "sqlite:///./renttool.db"
+# Адрес базы данных: локальный файл equipment_rental.db в корне проекта
+SQLALCHEMY_DATABASE_URL = "sqlite:///./equipment_rental.db"
 
 # Движок базы данных
 # check_same_thread=False обязателен для работы SQLite в многопоточном режиме FastAPI

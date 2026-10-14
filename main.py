@@ -1,5 +1,5 @@
 """
-main.py — Главная точка входа в приложение RentTool.
+main.py — Главная точка входа в приложение Equipment Rental.
 Запускает веб-сервер, подключает базу данных и объединяет все маршруты (роутеры).
 """
 import os
@@ -15,7 +15,7 @@ Base.metadata.create_all(bind=engine)
 
 # Инициализируем приложение FastAPI
 app = FastAPI(
-    title="RentTool API 🛠️",
+    title="Equipment Rental API 🛠️",
     description="Учебная система учета аренды оборудования и инструментов",
     version="1.0.0"
 )
@@ -42,6 +42,6 @@ def read_root():
     if os.path.exists(template_path):
         return FileResponse(template_path)
     return {
-        "message": "Сервер RentTool работает!",
+        "message": "Сервер Equipment Rental работает!",
         "docs": "Откройте http://127.0.0.1:8000/docs для интерактивного тестирования API"
     }
