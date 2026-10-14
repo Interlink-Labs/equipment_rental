@@ -39,6 +39,20 @@ class Client(Base):
     rentals = relationship("Rental", back_populates="client")
 
 
+class Employer(Base):
+    """
+    Таблица сотрудников / менеджеров (Employers / Staff).
+    Отвечает за учет сотрудников, проводящих операции аренды.
+    """
+    __tablename__ = "employers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)  # Логин сотрудника
+    full_name = Column(String, nullable=False)                         # ФИО сотрудника
+    role = Column(String, default="MANAGER")                           # Роль: 'MANAGER', 'ADMIN'
+    is_active = Column(String, default="ACTIVE")                       # Статус: 'ACTIVE', 'BLOCKED'
+
+
 class Rental(Base):
     """
     Таблица договоров аренды (факты выдачи оборудования клиенту).

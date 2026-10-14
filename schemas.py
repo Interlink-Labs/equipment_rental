@@ -59,7 +59,29 @@ class ClientResponse(ClientBase):
 
 
 # ==========================================
-# 3. Схемы для Аренды (Пара 3)
+# 3. Схемы для Сотрудников / Менеджеров (Employers)
+# ==========================================
+class EmployerBase(BaseModel):
+    username: str
+    full_name: str
+    role: Optional[str] = "MANAGER"
+
+
+class EmployerCreate(EmployerBase):
+    """Схема создания сотрудника."""
+    pass
+
+
+class EmployerResponse(EmployerBase):
+    """Схема ответа с данными сотрудника."""
+    id: int
+    is_active: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==========================================
+# 4. Схемы для Аренды (Пара 3)
 # ==========================================
 class RentalCreate(BaseModel):
     """Схема создания аренды: клиент указывает какой инструмент берет, свой ID и даты."""

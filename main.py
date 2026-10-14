@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 from database import engine, Base
-from routers import equipment, clients, rentals
+from routers import equipment, clients, rentals, employers
 
 # Автоматически создаем таблицы в файле базы данных SQLite при старте приложения, если их еще нет
 Base.metadata.create_all(bind=engine)
@@ -20,10 +20,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Подключаем роутеры от каждой пары
+# Подключаем роутеры по направлениям
 app.include_router(equipment.router)
 app.include_router(clients.router)
 app.include_router(rentals.router)
+app.include_router(employers.router)
 
 # Подключаем папку со статическими файлами (стили CSS и скрипты JS)
 static_dir = os.path.join(os.path.dirname(__file__), "static")

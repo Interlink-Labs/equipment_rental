@@ -70,7 +70,8 @@ equipment_rental/
 ├── routers/             # Роутеры по парам
 │   ├── equipment.py     # Зона ответственности Пары 1
 │   ├── clients.py       # Зона ответственности Пары 2
-│   └── rentals.py       # Зона ответственности Пары 3
+│   ├── rentals.py       # Зона ответственности Пары 3
+│   └── employers.py     # Модуль сотрудников и менеджеров (feature/employers)
 ├── templates/
 │   └── index.html       # HTML интерфейс
 ├── static/
