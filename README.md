@@ -1,83 +1,109 @@
-# 🛠️ Equipment Rental — Система учета аренды оборудования
+<div align="center">
 
-Простой и понятный учебный проект для команды из 8 разработчиков.
-Проект на GitHub Projects: [Interlink-Labs / equipment_rental](https://github.com/orgs/Interlink-Labs/projects/6)
+# *hey, we're equipment_rental*
 
-- **Backend:** Python + FastAPI
-- **База данных:** SQLite (хранится в одном локальном файле `equipment_rental.db`)
-- **ORM:** SQLAlchemy 2.0
-- **Frontend:** Чистый HTML5 + CSS3 + Vanilla JavaScript
-- **API Документация:** Swagger UI (доступна из коробки!)
+*forever young • система учета аренды оборудования • interlink-labs*
+
+<br/>
+
+<a href="https://github.com/orgs/Interlink-Labs/projects/6"><img src="https://img.shields.io/badge/PROJECTS-INTERLINK--LABS-000000?style=for-the-badge&logo=github&logoColor=white" alt="Projects"/></a>
+<a href="http://127.0.0.1:8000/docs"><img src="https://img.shields.io/badge/SWAGGER-API_DOCS-000000?style=for-the-badge&logo=fastapi&logoColor=white" alt="Swagger Docs"/></a>
+<a href="https://www.python.org/"><img src="https://img.shields.io/badge/PYTHON-3.12+-000000?style=for-the-badge&logo=python&logoColor=white" alt="Python Version"/></a>
+
+<br/><br/>
+
+### *tech stack*
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PYTHON-000000?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/FASTAPI-000000?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/SQLITE-000000?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite"/>
+  <img src="https://img.shields.io/badge/SQLALCHEMY-000000?style=for-the-badge&logo=sqlalchemy&logoColor=white" alt="SQLAlchemy"/>
+  <br/>
+  <img src="https://img.shields.io/badge/HTML5-000000?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+  <img src="https://img.shields.io/badge/CSS3-000000?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+  <img src="https://img.shields.io/badge/JAVASCRIPT-000000?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/GIT-000000?style=for-the-badge&logo=git&logoColor=white" alt="Git"/>
+</p>
+
+<hr/>
+
+</div>
+
+## 👥 Зоны ответственности команды (4 пары + Тимлид)
+
+| Направление | Ветка | Основные файлы | Задачи |
+|---|---|---|---|
+| 👑 **Team Lead** | `develop`, `main` | Архитектура, PR | Код-ревью, слияние веток, снятие блокеров |
+| 🛠️ **Пара 1: Оборудование** | `feature/equipment` | `routers/equipment.py` | CRUD инструментов, проверка инв. номера, фильтры |
+| 👤 **Пара 2: Клиенты** | `feature/clients` | `routers/clients.py` | База клиентов, уникальность номеров, поиск |
+| 📅 **Пара 3: Аренды** | `feature/rentals` | `routers/rentals.py`, `services.py` | Проверка дат, расчет стоимости, смена статусов |
+| 👔 **Сотрудники / Доступ** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
+| 🎨 **Пара 4: Frontend** | `feature/frontend` | `templates/`, `static/` | UI страницы, отправка fetch-запросов, адаптивная верстка |
 
 ---
 
-## 🚀 Пошаговая инструкция по запуску на компьютере
+## 🚀 Быстрый запуск на компьютере
 
-### Шаг 1. Откройте терминал в папке проекта
-Если вы в VS Code: нажмите в верхнем меню `Терминал -> Новый терминал` (`Ctrl + ~`).
-
-### Шаг 2. Создайте виртуальное окружение Python (1 раз)
+### 1. Создать виртуальное окружение (1 раз)
 ```bash
 python -m venv venv
 ```
 
-### Шаг 3. Активируйте виртуальное окружение
-- **Windows (PowerShell):**
-  ```powershell
-  venv\Scripts\Activate.ps1
-  ```
-  *(Если ругается на политики выполнения: запустите `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` и повторите).*
-- **Windows (CMD):**
-  ```cmd
-  venv\Scripts\activate.bat
-  ```
-- **macOS / Linux:**
-  ```bash
-  source venv/bin/activate
-  ```
-*(Слева в строке терминала появится зеленая надпись `(venv)` — значит, окружение активно).*
+### 2. Активировать окружение
+- **Windows (PowerShell):** `venv\Scripts\Activate.ps1`
+- **Windows (CMD):** `venv\Scripts\activate.bat`
+- **macOS / Linux:** `source venv/bin/activate`
 
-### Шаг 4. Установите библиотеки
+### 3. Установить библиотеки
 ```bash
 pip install -r requirements.txt
 ```
 
-### Шаг 5. Запустите сервер
+### 4. Запустить сервер
+```bash
+python main.py
+```
+*или команда uvicorn:*
 ```bash
 uvicorn main:app --reload
 ```
 
 ---
 
-## 🌐 Где посмотреть результат?
+## 🌐 Локальные эндпоинты
 
-После запуска перейдите по ссылкам в браузере:
-1. **Веб-интерфейс приложения:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-2. **Интерактивная панель Swagger (API Docs):** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-   *(Здесь можно нажимать кнопки `Try it out` и тестировать любые эндпоинты без написания фронтенда!)*
+- **Веб-интерфейс:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Интерактивный Swagger API:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
 
-## 📁 Структура папок
+## 📁 Структура проекта
 
 ```text
 equipment_rental/
-├── main.py              # Запуск FastAPI приложения и объединение маршрутов
-├── database.py          # Подключение к файлу SQLite
-├── models.py            # Модели таблиц базы данных (Equipment, Client, Rental)
+├── main.py              # Точка входа и объединение маршрутов
+├── database.py          # Подключение к SQLite (equipment_rental.db)
+├── models.py            # Модели таблиц (Equipment, Client, Rental, Employer)
 ├── schemas.py           # Pydantic схемы валидации
 ├── services.py          # Бизнес-логика (расчет цен, проверка дат)
 ├── routers/             # Роутеры по парам
 │   ├── equipment.py     # Зона ответственности Пары 1
 │   ├── clients.py       # Зона ответственности Пары 2
 │   ├── rentals.py       # Зона ответственности Пары 3
-│   └── employers.py     # Модуль сотрудников и менеджеров (feature/employers)
+│   └── employers.py     # Модуль сотрудников и менеджеров
 ├── templates/
 │   └── index.html       # HTML интерфейс
 ├── static/
 │   ├── style.css        # Стили
-│   └── app.js           # Логика фронтенда (Пара 4)
+│   └── app.js           # Фронтенд-скрипты
 ├── requirements.txt     # Зависимости
-├── CONTRIBUTING.md      # Правила работы с Git для пар
-└── README.md            # Данная инструкция
+├── CONTRIBUTING.md      # Правила работы с ветками
+└── README.md            # Документация проекта
 ```
+
+---
+
+<div align="center">
+  <sub>made with ❤️ by team of 8 developers • interlink labs • 2026</sub>
+</div>
