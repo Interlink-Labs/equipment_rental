@@ -8,11 +8,11 @@
 
 | Пара | Ветка | Основные файлы | Задачи |
 |---|---|---|---|
+| **Team Lead** | `develop`, `main` | `templates/index.html` | Архитектура, верстка HTML, ревью и слияние PR |
 | **Пара 1** | `feature/equipment` | `routers/equipment.py` | Доделать PUT, DELETE, фильтрацию по статусу |
 | **Пара 2** | `feature/clients` | `routers/clients.py` | Реализовать GET, POST, поиск по телефону |
 | **Пара 3** | `feature/rentals` | `routers/rentals.py`, `services.py` | Бронирование, проверка пересечения дат, возврат |
-| **Пара 4** | `feature/frontend` | `templates/`, `static/` | Формы, списки, кнопки аренды, верстка |
-| **Сотрудники** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
+| **Пара 4** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
 
 > ⚠️ **Главное правило:** НЕ меняйте файлы других пар без предварительного согласования в общем чате!
 

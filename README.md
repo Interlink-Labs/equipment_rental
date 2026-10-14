@@ -26,12 +26,11 @@
 
 | Направление | Ветка | Основные файлы | Задачи |
 |---|---|---|---|
-| 👑 **Team Lead** | `develop`, `main` | Архитектура, PR | Код-ревью, слияние веток, снятие блокеров |
+| 👑 **Team Lead** | `develop`, `main` | `templates/index.html`, PR | Архитектура, код-ревью, слияние веток, верстка HTML |
 | 🛠️ **Пара 1: Оборудование** | `feature/equipment` | `routers/equipment.py` | CRUD инструментов, проверка инв. номера, фильтры |
 | 👤 **Пара 2: Клиенты** | `feature/clients` | `routers/clients.py` | База клиентов, уникальность номеров, поиск |
 | 📅 **Пара 3: Аренды** | `feature/rentals` | `routers/rentals.py`, `services.py` | Проверка дат, расчет стоимости, смена статусов |
-| 👔 **Сотрудники / Доступ** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
-| 🎨 **Пара 4: Frontend** | `feature/frontend` | `templates/index.html` | Верстка интерфейса на чистом HTML |
+| 👔 **Пара 4: Сотрудники / Доступ** | `feature/employers` | `routers/employers.py` | Учет менеджеров, роли, авторизация |
 
 ---
 
@@ -83,9 +82,9 @@ equipment_rental/
 │   ├── equipment.py     # Зона ответственности Пары 1
 │   ├── clients.py       # Зона ответственности Пары 2
 │   ├── rentals.py       # Зона ответственности Пары 3
-│   └── employers.py     # Модуль сотрудников и менеджеров
+│   └── employers.py     # Зона ответственности Пары 4
 ├── templates/
-│   └── index.html       # HTML интерфейс
+│   └── index.html       # HTML интерфейс (Team Lead)
 ├── static/
 │   ├── style.css        # Стили
 │   └── app.js           # Фронтенд-скрипты
