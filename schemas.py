@@ -2,29 +2,21 @@ from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class ClientCreate(BaseModel):
-    username: str
-    firstName: str
-    lastName: str
-    email: EmailStr
-    password: str
+    name: str
     phone: str
+    email: EmailStr | None = None
 
 
 class ClientUpdate(BaseModel):
-    username: str
-    firstName: str
-    lastName: str
-    email: EmailStr
-    password: str
-    phone: str
+    name: str | None = None
+    phone: str | None = None
+    email: EmailStr | None = None
 
 
-class ClientRead(BaseModel):
+class ClientResponse(BaseModel):
     id: int
-    username: str
-    firstName: str
-    lastName: str
-    email: EmailStr
+    name: str
     phone: str
+    email: str | None
 
-    model_config = ConfigDict(from_attributes)
+    model_config = ConfigDict(from_attributes=True)
