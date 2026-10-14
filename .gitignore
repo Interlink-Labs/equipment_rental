@@ -1,0 +1,22 @@
+# Виртуальное окружение Python
+venv/
+.venv/
+env/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# База данных SQLite (чтобы не заливать локальный тестовый файл в Git!)
+*.db
+*.sqlite3
+renttool.db
+
+# Настройки IDE / Редакторов
+.vscode/
+.idea/
+*.swp
+
+# Логи и временные файлы
+*.log

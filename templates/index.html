@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentTool — Учет аренды оборудования</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container navbar-content">
+            <div class="logo">
+                <span class="icon">🛠️</span>
+                <h1>RentTool</h1>
+            </div>
+            <nav>
+                <a href="/docs" target="_blank" class="nav-link docs-badge">📖 Swagger API Docs</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Блок добавления оборудования -->
+        <section class="card form-section">
+            <h2>➕ Добавить новый инструмент</h2>
+            <form id="add-equipment-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Название инструмента</label>
+                        <input type="text" id="name" placeholder="Напр. Перфоратор Bosch 2-26" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inv-number">Инвентарный номер</label>
+                        <input type="text" id="inv-number" placeholder="Напр. INV-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Тариф в сутки (руб.)</label>
+                        <input type="number" id="rate" step="0.01" min="1" placeholder="Напр. 750" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-submit">Сохранить инструмент</button>
+                <div id="form-message" class="message"></div>
+            </form>
+        </section>
+
+        <!-- Блок со списком оборудования -->
+        <section class="card list-section">
+            <div class="section-header">
+                <h2>📋 Доступное оборудование</h2>
+                <button class="btn btn-secondary" id="btn-refresh">🔄 Обновить список</button>
+            </div>
+            
+            <div id="loading" class="loading">Загрузка данных...</div>
+
+            <div class="table-responsive">
+                <table class="table" id="equipment-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Инв. номер</th>
+                            <th>Название</th>
+                            <th>Тариф (руб/сутки)</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipment-list">
+                        <!-- Сюда JavaScript будет подставлять строки -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <p>📭 В базе пока нет инструментов. Добавьте первый инструмент через форму выше!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>RentTool • Учебный проект команды из 8 разработчиков • FastAPI + SQLite</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
