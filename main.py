@@ -46,3 +46,12 @@ def read_root():
         "message": "Сервер Equipment Rental работает!",
         "docs": "Откройте http://127.0.0.1:8000/docs для интерактивного тестирования API"
     }
+
+
+# Позволяет запускать сервер кнопкой "Play" (Run) в VS Code или командой "python main.py"
+if __name__ == "__main__":
+    import uvicorn
+    print("\n🚀 Сервер запускается на http://127.0.0.1:8000")
+    print("📖 Документация Swagger доступна на http://127.0.0.1:8000/docs\n")
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
