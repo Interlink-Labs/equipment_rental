@@ -5,6 +5,7 @@ routers/rentals.py — Эндпоинты для оформления, возв�
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import date
 
 from database import get_db
 import models
@@ -67,6 +68,74 @@ def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_d
     db.commit()
     db.refresh(new_rental)
     return new_rental
+
+
+# =======================================================================
+# СОЗДАНИЕ БРОНИ
+# =======================================================================
+
+@router.post("/book", response_model=schemas.RentalResponse, status_code=status.HTTP_201_CREATED)
+def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get_db)):
+    """
+    Оформить бронь инструмента на будущие даты.
+    Отличие от аренды: инструмент не выдаётся сразу, статус инструмента
+    не меняется на 'RENTED', а сама бронь получает статус 'RESERVED'.
+
+    Логика:
+    1. Проверить существование клиента и инструмента.
+    2. Проверить корректность дат (start_date <= end_date).
+    3. Проверить, что дата начала — в будущем (иначе это уже аренда).
+    4. Проверить доступность инструмента на выбранные даты.
+    5. Рассчитать стоимость.
+    6. Создать запись брони со статусом 'RESERVED'.
+    """
+    # 1. Проверяем инструмент
+    tool = db.query(models.Equipment).filter(models.Equipment.id == booking_data.equipment_id).first()
+    if not tool:
+        raise HTTPException(status_code=404, detail="Инструмент не найден")
+
+    # 2. Проверяем клиента
+    client = db.query(models.Client).filter(models.Client.id == booking_data.client_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Клиент не найден")
+
+    # 3. Проверка корректности дат
+    if booking_data.start_date > booking_data.end_date:
+        raise HTTPException(status_code=400, detail="Дата начала не может быть позже даты окончания!")
+
+    # 4. Бронь имеет смысл только на будущие даты
+    if booking_data.start_date < date.today():
+        raise HTTPException(
+            status_code=400,
+            detail="Дата начала брони не может быть в прошлом. Для текущей аренды используйте POST /rentals/"
+        )
+
+    # 5. Проверяем доступность инструмента на выбранные даты
+    if not services.is_equipment_available_for_dates(
+        db, tool.id, booking_data.start_date, booking_data.end_date
+    ):
+        raise HTTPException(status_code=400, detail="Инструмент уже занят или забронирован на эти даты!")
+
+    # 6. Расчет стоимости
+    price = services.calculate_rental_price(
+        tool.daily_rate, booking_data.start_date, booking_data.end_date
+    )
+
+    # 7. Создаём бронь (статус инструмента НЕ меняем — он остаётся доступным
+    #    для других броней на непересекающиеся даты)
+    new_booking = models.Rental(
+        equipment_id=booking_data.equipment_id,
+        client_id=booking_data.client_id,
+        start_date=booking_data.start_date,
+        end_date=booking_data.end_date,
+        total_cost=price,
+        status="RESERVED"
+    )
+
+    db.add(new_booking)
+    db.commit()
+    db.refresh(new_booking)
+    return new_booking
 
 
 # =======================================================================
