@@ -2,7 +2,6 @@
 
 # *hey, we're equipment_rental*
 
-*forever young*
 
 <br/>
 
