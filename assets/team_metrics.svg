@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195" fill="none">
+  <style>
+    .metric-num { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 32px; font-weight: 800; fill: #ffffff; }
+    .metric-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; font-weight: 700; fill: #ffffff; }
+    .metric-sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #8b949e; }
+    .center-num { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 28px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <!-- Card Background -->
+  <rect x="0.5" y="0.5" width="494" height="194" rx="8" fill="#0d1117" stroke="#30363d"/>
+
+  <!-- Divider 1 -->
+  <line x1="165" y1="30" x2="165" y2="165" stroke="#21262d" stroke-width="1.5"/>
+
+  <!-- Divider 2 -->
+  <line x1="330" y1="30" x2="330" y2="165" stroke="#21262d" stroke-width="1.5"/>
+
+  <!-- Column 1: Total Developers -->
+  <g transform="translate(82, 0)">
+    <text x="0" y="75" text-anchor="middle" class="metric-num">8</text>
+    <text x="0" y="112" text-anchor="middle" class="metric-title">Developers</text>
+    <text x="0" y="136" text-anchor="middle" class="metric-sub">4 Pairs + Lead</text>
+  </g>
+
+  <!-- Column 2 (Center): Active Branches with circular flame ring -->
+  <g transform="translate(247, 0)">
+    <!-- Ring -->
+    <circle cx="0" cy="70" r="34" fill="none" stroke="#21262d" stroke-width="4"/>
+    <circle cx="0" cy="70" r="34" fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="160 50" stroke-linecap="round" transform="rotate(-90 0 70)"/>
+    
+    <!-- Flame icon at top of circle -->
+    <text x="0" y="32" text-anchor="middle" font-size="16">🔥</text>
+
+    <!-- Number inside ring -->
+    <text x="0" y="80" text-anchor="middle" class="center-num">5</text>
+
+    <!-- Labels below ring -->
+    <text x="0" y="128" text-anchor="middle" class="metric-title">Active Branches</text>
+    <text x="0" y="152" text-anchor="middle" class="metric-sub">feature/* in git</text>
+  </g>
+
+  <!-- Column 3: Stack & Readiness -->
+  <g transform="translate(412, 0)">
+    <text x="0" y="75" text-anchor="middle" class="metric-num">100%</text>
+    <text x="0" y="112" text-anchor="middle" class="metric-title">Tasks Ready</text>
+    <text x="0" y="136" text-anchor="middle" class="metric-sub">Python + HTML5</text>
+  </g>
+</svg>
