@@ -2,8 +2,6 @@
 
 # *hey, we're equipment_rental*
 
-*forever young*
-
 <br/>
 
 <a href="https://github.com/orgs/Interlink-Labs/projects/6"><img src="https://img.shields.io/badge/PROJECTS-INTERLINK--LABS-000000?style=for-the-badge&logo=github&logoColor=white" alt="Projects"/></a>
