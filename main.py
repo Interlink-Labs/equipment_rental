@@ -1,3 +1,7 @@
+# Запуск                   python -m uvicorn main:app --reload
+# http://127.0.0.1:8000/
+# http://127.0.0.1:8000/docs - документация
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
