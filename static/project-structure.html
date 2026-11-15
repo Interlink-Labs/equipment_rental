@@ -92,6 +92,21 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
   0%,100%{rotate:0deg}
   50%{rotate:-5deg}
 }
+.docs-layout:has(.docs-menu details[open]) .joker{display:none}
+.docs-layout:has(.docs-menu details[open]){grid-template-columns:minmax(0,1fr)}
+@media(min-width:900px){
+  .docs-layout:has(details[open]){--menu-width:36%;--menu-row:68px}
+  .docs-menu:has(details[open]){position:relative;min-height:calc(3 * var(--menu-row))}
+  .docs-menu:has(details[open]) details{margin:0}
+  .docs-menu:has(details[open]) summary{position:absolute;left:0;top:calc(var(--menu-index) * var(--menu-row));max-width:calc(var(--menu-width) - 16px);font-size:clamp(1rem,2.2vw,1.7rem)}
+  .docs-menu details:nth-of-type(1){--menu-index:0}
+  .docs-menu details:nth-of-type(2){--menu-index:1}
+  .docs-menu details:nth-of-type(3){--menu-index:2}
+  .docs-menu details[open]>.panel{margin:0 0 0 var(--menu-width)}
+}
+@media(prefers-reduced-motion:no-preference){
+  .docs-layout:not(:has(details[open])) .joker{animation:menu-cut 300ms ease-out both}
+}
 </style>
 </head>
 <body>
