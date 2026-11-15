@@ -16,7 +16,7 @@ a{color:#ff9faf;text-underline-offset:4px}
 :focus-visible{outline:2px solid var(--red);outline-offset:4px}
 h1{font-size:clamp(2.25rem,7vw,5.6rem);font-style:italic;line-height:.95;letter-spacing:-.06em;text-transform:uppercase;margin:36px 0 26px;overflow-wrap:anywhere}
 details{margin:11px 0}
-summary{list-style:none;cursor:pointer;width:fit-content;max-width:100%;padding:8px 30px 9px 18px;border-left:5px solid var(--red);background:#202026;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(1.14rem,4vw,2.4rem);clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
+summary{list-style:none;cursor:pointer;width:fit-content;max-width:100%;padding:8px 30px 9px 18px;border-left:5px solid var(--red);background:#202026;font-weight:900;font-style:italic;text-transform:uppercase;font-size:var(--menu-font);line-height:1.5;clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
 summary::-webkit-details-marker{display:none}
 summary:before{content:"▸";margin-right:10px;color:var(--red)}
 summary:hover,details[open]>summary{background:var(--paper);color:#151015}
@@ -41,7 +41,7 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
   details:nth-of-type(2):not([open]) > summary { animation-delay: 90ms; }
   details:nth-of-type(3):not([open]) > summary { animation-delay: 135ms; }
   summary { transition: translate 140ms ease; }
-  summary:hover, summary:focus-visible { translate: 6px; }
+
   details[open] > summary { animation: select-flash 260ms ease-out both; }
   details[open] > .panel { animation: panel-cut 330ms cubic-bezier(.12,.8,.25,1) both; }
 }
@@ -54,14 +54,14 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
   to { opacity: 1; transform: none; }
 }
 @keyframes select-flash {
-  0% { background: #b50030; color: white; transform: translateX(5px) skewX(-6deg); }
+  0% { background: #b50030; color: white; }
   100% { background: var(--paper); color: #151015; transform: none; }
 }
 @keyframes panel-cut {
   from { opacity: 0; transform: translateY(10px); clip-path: polygon(0 0, 28% 0, 0 100%, 0 100%); }
   to { opacity: 1; transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 }
-.docs-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,38%);gap:24px;align-items:start}
+.docs-layout{--menu-font:clamp(1.14rem,4vw,2.4rem);--menu-width:calc(62% - 24px);display:grid;grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);gap:24px;align-items:start}
 .docs-menu{min-width:0}
 .joker{position:relative;align-self:start;margin:0;isolation:isolate}
 .joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
@@ -94,15 +94,16 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 }
 .docs-layout:has(.docs-menu details[open]) .joker{display:none}
 .docs-layout:has(.docs-menu details[open]){grid-template-columns:minmax(0,1fr)}
-@media(min-width:900px){
-  .docs-layout:has(details[open]){--menu-width:36%;--menu-row:68px}
+@media(min-width:721px) and (max-width:1099px){ .docs-menu:has(details[open]) summary{max-width:var(--menu-width)} }
+@media(min-width:1100px){
+  .docs-layout:has(details[open]){--menu-row:calc(1.5 * var(--menu-font) + 28px)}
   .docs-menu:has(details[open]){position:relative;min-height:calc(3 * var(--menu-row))}
   .docs-menu:has(details[open]) details{margin:0}
-  .docs-menu:has(details[open]) summary{position:absolute;left:0;top:calc(var(--menu-index) * var(--menu-row));max-width:calc(var(--menu-width) - 16px);font-size:clamp(1rem,2.2vw,1.7rem)}
+  .docs-menu:has(details[open]) summary{position:absolute;left:0;top:calc(11px + var(--menu-index) * var(--menu-row));max-width:var(--menu-width)}
   .docs-menu details:nth-of-type(1){--menu-index:0}
   .docs-menu details:nth-of-type(2){--menu-index:1}
   .docs-menu details:nth-of-type(3){--menu-index:2}
-  .docs-menu details[open]>.panel{margin:0 0 0 var(--menu-width)}
+  .docs-menu details[open]>.panel{margin:0 0 0 calc(var(--menu-width) + 24px)}
 }
 @media(prefers-reduced-motion:no-preference){
   .docs-layout:not(:has(details[open])) .joker{animation:menu-cut 300ms ease-out both}
