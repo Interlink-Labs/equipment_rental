@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Структура проекта · Equipment Rental</title>
+<style>
+:root{color-scheme:dark;font-family:"Segoe UI",system-ui,sans-serif;background:#0b0b0e;color:#f3f3f5}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:1060px;margin:auto;padding:32px clamp(18px,5vw,64px) 64px}
+header{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center;border-bottom:1px solid #38343a;padding-bottom:20px}
+.brand{font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.brand span{color:#ff5066}
+a{color:inherit;text-underline-offset:4px}
+a:focus-visible{outline:2px solid #ff5066;outline-offset:4px}
+h1{font-size:clamp(2.4rem,8vw,5rem);letter-spacing:-.06em;line-height:1;margin:48px 0 14px}
+.intro{color:#beb7bf;margin:0 0 30px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+article{background:linear-gradient(135deg,#211317,#141419 55%);border:1px solid #393138;border-left:3px solid #e51c40;padding:24px}
+h2{margin:0;font-size:1.25rem}
+article p{color:#c3bac2;line-height:1.5;margin:10px 0 18px}
+ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+li a{display:inline-block;padding:8px 10px;border:1px solid #5b3b48;color:#ffadb8;text-decoration:none}
+li a:hover{background:#522235}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+</style>
+<main>
+  <header>
+    <div class="brand"><span>Equipment</span> Rental</div>
+    <a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a>
+  </header>
+  <h1>Структура проекта</h1>
+  <p class="intro">Файлы и модули системы аренды IT-оборудования.</p>
+  <section class="grid" aria-label="Модули проекта">
+    <article><h2>Запуск</h2><p>Точка входа FastAPI и зависимости.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/main.py"><code>main.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/requirements.txt"><code>requirements.txt</code></a></li>
+    </ul></article>
+    <article><h2>Данные</h2><p>SQLite, модели таблиц и проверка данных.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/database.py"><code>database.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/models.py"><code>models.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/schemas.py"><code>schemas.py</code></a></li>
+    </ul></article>
+    <article><h2>API</h2><p>Маршруты, расчёт стоимости и проверка дат.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/routers"><code>routers/</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/services.py"><code>services.py</code></a></li>
+    </ul></article>
+    <article><h2>Интерфейс</h2><p>Разметка, стили и JavaScript.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/templates"><code>templates/</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/static"><code>static/</code></a></li>
+    </ul></article>
+  </section>
+</main>
+</html>
