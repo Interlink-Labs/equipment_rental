@@ -1,37 +1,78 @@
 <!doctype html>
 <html lang="ru">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Структура проекта · Equipment Rental</title>
+<title>Документация · Equipment Rental</title>
 <style>
-:root{color-scheme:dark;font-family:"Segoe UI",system-ui,sans-serif;background:#0b0b0e;color:#f3f3f5}
+:root{color-scheme:dark;--red:#ff3857;--ink:#0d0d10;--paper:#f7f4f4;--muted:#d2c6cc;font-family:"Segoe UI",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
 *{box-sizing:border-box}
-body{margin:0}
-main{max-width:1060px;margin:auto;padding:32px clamp(18px,5vw,64px) 64px}
-header{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center;border-bottom:1px solid #38343a;padding-bottom:20px}
-.brand{font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.brand span{color:#ff5066}
-a{color:inherit;text-underline-offset:4px}
-a:focus-visible{outline:2px solid #ff5066;outline-offset:4px}
-h1{font-size:clamp(2.4rem,8vw,5rem);letter-spacing:-.06em;line-height:1;margin:48px 0 14px}
-.intro{color:#beb7bf;margin:0 0 30px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-article{background:linear-gradient(135deg,#211317,#141419 55%);border:1px solid #393138;border-left:3px solid #e51c40;padding:24px}
-h2{margin:0;font-size:1.25rem}
-article p{color:#c3bac2;line-height:1.5;margin:10px 0 18px}
-ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
-li a{display:inline-block;padding:8px 10px;border:1px solid #5b3b48;color:#ffadb8;text-decoration:none}
-li a:hover{background:#522235}
-@media(max-width:620px){.grid{grid-template-columns:1fr}}
+body{margin:0;background:linear-gradient(147deg,transparent 52%,#2d141e 52%,#2d141e 67%,transparent 67%),#0d0d10;min-height:100vh}
+main{max-width:1200px;margin:auto;padding:24px clamp(18px,5vw,64px) 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid #423740;padding-bottom:16px}
+.brand{font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.brand span{color:var(--red)}
+a{color:#ff9faf;text-underline-offset:4px}
+:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+h1{font-size:clamp(2.25rem,7vw,5.6rem);font-style:italic;line-height:.95;letter-spacing:-.06em;text-transform:uppercase;margin:36px 0 26px;overflow-wrap:anywhere}
+details{margin:11px 0}
+summary{list-style:none;cursor:pointer;width:fit-content;max-width:100%;padding:8px 30px 9px 18px;border-left:5px solid var(--red);background:#202026;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(1.14rem,4vw,2.4rem);clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"▸";margin-right:10px;color:var(--red)}
+summary:hover,details[open]>summary{background:var(--paper);color:#151015}
+details[open]>summary:before{content:"▾";color:#b50030}
+summary:focus-visible{outline-offset:-4px}
+.panel{position:relative;margin:8px 0 18px;padding:clamp(16px,3vw,32px);background:linear-gradient(150deg,#23171f,#17171c 65%);border:1px solid #59404e;border-left:4px solid var(--red);overflow-wrap:anywhere}
+.panel:before{content:"";position:absolute;top:0;right:0;width:76px;height:20px;background:var(--red);clip-path:polygon(35% 0,100% 0,100% 100%,0 100%);pointer-events:none}
+.panel h2{font-size:clamp(1.4rem,4vw,2.45rem);font-weight:900;font-style:italic;margin:0 0 16px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+article{padding:14px;background:#231e25;border-left:2px solid #95435a}
+article h2,article h3{font-size:1.05rem;margin:0 0 8px}
+p{line-height:1.5;color:var(--muted)}
+article p{margin:0 0 8px}
+ul{padding-left:18px}
+pre{padding:12px;background:#101014;border-left:2px solid #99435b;overflow:auto}
+dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywhere}
+@media(max-width:650px){.grid{grid-template-columns:1fr}}
 </style>
+</head>
+<body>
 <main>
-  <header>
-    <div class="brand"><span>Equipment</span> Rental</div>
-    <a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a>
-  </header>
-  <h1>Структура проекта</h1>
-  <p class="intro">Файлы и модули системы аренды IT-оборудования.</p>
-  <section class="grid" aria-label="Модули проекта">
+<header><div class="brand"><span>Equipment</span> Rental</div><a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a></header>
+<h1>Документация</h1>
+<details name="documentation">
+<summary>Возможности</summary>
+<div class="panel"><h2>Возможности проекта</h2>
+<div class="grid">
+<article><h3>Оборудование</h3><p>Каталог с дневными тарифами и инвентарными номерами.</p></article>
+<article><h3>Клиенты</h3><p>Карточки клиентов с контактными данными.</p></article>
+<article><h3>Аренды</h3><p>Оформление аренды и брони, расчёт стоимости по датам.</p></article>
+<article><h3>Сотрудники</h3><p>Учёт сотрудников и их ролей.</p></article>
+</div>
+<p>В браузере доступен <a href="/">каталог оборудования</a>. Маршруты всех разделов собраны в <a href="/docs">Swagger</a>.</p>
+</div>
+</details>
+<details name="documentation">
+<summary>Быстрый запуск</summary>
+<div class="panel"><h2>Быстрый запуск</h2>
+<p>Откройте терминал в папке проекта и создайте виртуальное окружение.</p>
+<pre><code>python -m venv venv</code></pre>
+<p>Активируйте окружение командой для своего терминала.</p>
+<dl>
+<dt>Windows PowerShell</dt><dd><code>venv\Scripts\Activate.ps1</code></dd>
+<dt>Windows CMD</dt><dd><code>venv\Scripts\activate.bat</code></dd>
+<dt>macOS / Linux</dt><dd><code>source venv/bin/activate</code></dd>
+</dl>
+<p>Установите зависимости и запустите сервер.</p>
+<pre><code>python -m pip install -r requirements.txt
+python main.py</code></pre>
+<p><a href="/">Открыть каталог</a> · <a href="/docs">Открыть Swagger</a></p>
+</div>
+</details>
+<details name="documentation">
+<summary>Структура проекта</summary>
+<div class="panel"><h2>Структура проекта</h2>
+<section class="grid" aria-label="Модули проекта">
     <article><h2>Запуск</h2><p>Точка входа FastAPI и зависимости.</p><ul>
       <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/main.py"><code>main.py</code></a></li>
       <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/requirements.txt"><code>requirements.txt</code></a></li>
@@ -50,5 +91,8 @@ li a:hover{background:#522235}
       <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/static"><code>static/</code></a></li>
     </ul></article>
   </section>
+</div>
+</details>
 </main>
+</body>
 </html>

@@ -55,7 +55,7 @@ python main.py
 
 ## Структура проекта
 
-[Открыть страницу структуры проекта](http://127.0.0.1:8000/static/project-structure.html) после запуска сервера. [Посмотреть исходный HTML](./static/project-structure.html).
+[Открыть интерактивную документацию](http://127.0.0.1:8000/static/project-structure.html) после запуска сервера.
 
 ![Equipment Rental — аренда IT-оборудования](./assets/equipment-rental-banner.png)
 
