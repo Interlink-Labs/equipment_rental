@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const formMessage = document.getElementById('form-message');
     const btnRefresh = document.getElementById('btn-refresh');
     const statusFilter = document.getElementById('equipment-status-filter');
+    const searchInput = document.getElementById('equipment-search');
     const actionMessage = document.getElementById('equipment-action-message');
     let equipmentRequest;
+    let searchTimer;
 
     // Функция загрузки списка оборудования с бэкенда (GET /equipment/)
     async function loadEquipment() {
@@ -31,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error(`Ошибка загрузки: ${response.status}`);
             }
-            const data = await response.json();
+            const items = await response.json();
             if (request.signal.aborted) return;
+            const search = searchInput.value.trim().toLocaleLowerCase('ru');
+            const data = items.filter(item =>
+                item.name.toLocaleLowerCase('ru').includes(search) ||
+                item.inventory_number.toLocaleLowerCase('ru').includes(search)
+            );
 
             loadingEl.style.display = 'none';
 
@@ -163,6 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loadEquipment();
     });
     statusFilter.addEventListener('change', loadEquipment);
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(loadEquipment, 250);
+    });
 
     // Вспомогательная функция для показа уведомлений
     function showMessage(element, text, type) {
