@@ -9,19 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const addForm = document.getElementById('add-equipment-form');
     const formMessage = document.getElementById('form-message');
     const btnRefresh = document.getElementById('btn-refresh');
+    const statusFilter = document.getElementById('equipment-status-filter');
+    const actionMessage = document.getElementById('equipment-action-message');
+    let equipmentRequest;
 
     // Функция загрузки списка оборудования с бэкенда (GET /equipment/)
     async function loadEquipment() {
+        equipmentRequest?.abort();
+        const request = new AbortController();
+        equipmentRequest = request;
         loadingEl.style.display = 'block';
         equipmentTable.style.display = 'none';
         emptyStateEl.style.display = 'none';
 
         try {
-            const response = await fetch('/equipment/');
+            const query = new URLSearchParams();
+            if (statusFilter.value) {
+                query.set('status_filter', statusFilter.value);
+            }
+            const response = await fetch(`/equipment/?${query}`, { signal: request.signal });
             if (!response.ok) {
                 throw new Error(`Ошибка загрузки: ${response.status}`);
             }
             const data = await response.json();
+            if (request.signal.aborted) return;
 
             loadingEl.style.display = 'none';
 
@@ -55,11 +66,56 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${item.daily_rate.toFixed(2)} ₽</td>
                     <td><span class="badge ${badgeClass}">${statusText}</span></td>
                 `;
+                const actions = tr.insertCell();
+                const changeStatus = document.createElement('button');
+                changeStatus.type = 'button';
+                changeStatus.className = 'btn btn-secondary';
+                changeStatus.textContent = 'Изменить статус';
+                changeStatus.disabled = item.status === 'RENTED';
+                changeStatus.addEventListener('click', () => {
+                    const nextStatus = item.status === 'REPAIR' ? 'AVAILABLE' : 'REPAIR';
+                    updateEquipment(item.id, 'PUT', { status: nextStatus }, actions);
+                });
+
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.className = 'btn btn-secondary';
+                remove.textContent = 'Удалить';
+                remove.addEventListener('click', () => {
+                    if (window.confirm(`Удалить инструмент «${item.name}»?`)) {
+                        updateEquipment(item.id, 'DELETE', undefined, actions);
+                    }
+                });
+                actions.append(changeStatus, ' ', remove);
                 equipmentList.appendChild(tr);
             });
         } catch (error) {
+            if (request.signal.aborted) return;
             loadingEl.style.display = 'none';
             showMessage(formMessage, `Не удалось загрузить данные: ${error.message}`, 'error');
+        }
+    }
+
+    async function updateEquipment(id, method, payload, actions) {
+        const buttons = Array.from(actions.querySelectorAll('button:not(:disabled)'));
+        buttons.forEach(button => { button.disabled = true; });
+        try {
+            const options = { method };
+            if (payload) {
+                options.headers = { 'Content-Type': 'application/json' };
+                options.body = JSON.stringify(payload);
+            }
+            const response = await fetch(`/equipment/${id}`, options);
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                throw new Error(typeof result.detail === 'string' ? result.detail : `Ошибка ${response.status}`);
+            }
+            showMessage(actionMessage, method === 'DELETE' ? 'Инструмент удалён' : 'Статус обновлён', 'success');
+            await loadEquipment();
+        } catch (error) {
+            showMessage(actionMessage, error.message, 'error');
+        } finally {
+            buttons.forEach(button => { button.disabled = false; });
         }
     }
 
@@ -106,12 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRefresh.addEventListener('click', () => {
         loadEquipment();
     });
+    statusFilter.addEventListener('change', loadEquipment);
 
     // Вспомогательная функция для показа уведомлений
     function showMessage(element, text, type) {
         element.textContent = text;
         element.className = `message ${type}`;
-        setTimeout(() => {
+        element.style.display = 'block';
+        clearTimeout(element.messageTimer);
+        element.messageTimer = setTimeout(() => {
             element.style.display = 'none';
         }, 5000);
     }
