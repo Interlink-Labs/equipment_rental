@@ -61,12 +61,21 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
   from { opacity: 0; transform: translateY(10px); clip-path: polygon(0 0, 28% 0, 0 100%, 0 100%); }
   to { opacity: 1; transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 }
+.docs-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,38%);gap:24px;align-items:start}
+.docs-menu{min-width:0}
+.joker{position:relative;align-self:start;margin:0;isolation:isolate}
+.joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
+.joker img{display:block;width:100%;height:auto;filter:drop-shadow(10px 12px 0 #0d0d10)}
+.joker figcaption{text-align:right;font-size:.78rem}
+.project-banner{display:block;width:100%;height:auto;margin-top:36px;border:1px solid #79313e}
+@media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
 </style>
 </head>
 <body>
 <main>
 <header><div class="brand"><span>Equipment</span> Rental</div><a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a></header>
 <h1>Документация</h1>
+<div class="docs-layout"><div class="docs-menu">
 <details name="documentation">
 <summary>Возможности</summary>
 <div class="panel"><h2>Возможности проекта</h2>
@@ -120,6 +129,13 @@ python main.py</code></pre>
   </section>
 </div>
 </details>
+</div>
+<figure class="joker">
+  <img src="./joker.png" alt="Джокер из Persona 5" width="1708" height="1708">
+  <figcaption><a href="https://www.ssbwiki.com/File:Joker_SSBU.png">Источник изображения</a></figcaption>
+</figure>
+</div>
+<img class="project-banner" src="./equipment-rental-banner.png" alt="Equipment Rental — аренда IT-оборудования" loading="lazy">
 </main>
 </body>
 </html>
