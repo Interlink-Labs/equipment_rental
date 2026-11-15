@@ -34,6 +34,33 @@ ul{padding-left:18px}
 pre{padding:12px;background:#101014;border-left:2px solid #99435b;overflow:auto}
 dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywhere}
 @media(max-width:650px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: no-preference) {
+  h1 { animation: title-cut 310ms cubic-bezier(.12,.8,.25,1) both; }
+  details > summary { animation: menu-cut 300ms cubic-bezier(.12,.8,.25,1) both; }
+  details:nth-of-type(1):not([open]) > summary { animation-delay: 45ms; }
+  details:nth-of-type(2):not([open]) > summary { animation-delay: 90ms; }
+  details:nth-of-type(3):not([open]) > summary { animation-delay: 135ms; }
+  summary { transition: translate 140ms ease; }
+  summary:hover, summary:focus-visible { translate: 6px; }
+  details[open] > summary { animation: select-flash 260ms ease-out both; }
+  details[open] > .panel { animation: panel-cut 330ms cubic-bezier(.12,.8,.25,1) both; }
+}
+@keyframes title-cut {
+  from { opacity: 0; transform: translateX(-18px) skewX(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes menu-cut {
+  from { opacity: 0; transform: translate(-22px, 7px) skewX(-10deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes select-flash {
+  0% { background: #b50030; color: white; transform: translateX(5px) skewX(-6deg); }
+  100% { background: var(--paper); color: #151015; transform: none; }
+}
+@keyframes panel-cut {
+  from { opacity: 0; transform: translateY(10px); clip-path: polygon(0 0, 28% 0, 0 100%, 0 100%); }
+  to { opacity: 1; transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
 </style>
 </head>
 <body>
