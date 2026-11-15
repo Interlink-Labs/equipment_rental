@@ -46,7 +46,14 @@
         <!-- Блок со списком оборудования -->
         <section class="card list-section">
             <div class="section-header">
-                <h2>📋 Доступное оборудование</h2>
+                <h2>📋 Оборудование</h2>
+                <label for="equipment-status-filter">Статус</label>
+                <select id="equipment-status-filter">
+                    <option value="">Все</option>
+                    <option value="AVAILABLE">Доступен</option>
+                    <option value="RENTED">В аренде</option>
+                    <option value="REPAIR">В ремонте</option>
+                </select>
                 <button class="btn btn-secondary" id="btn-refresh">🔄 Обновить список</button>
             </div>
             
@@ -61,6 +68,7 @@
                             <th>Название</th>
                             <th>Тариф (руб/сутки)</th>
                             <th>Статус</th>
+                            <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody id="equipment-list">
@@ -69,8 +77,9 @@
                 </table>
             </div>
 
+            <div id="equipment-action-message" class="message" role="status"></div>
             <div id="empty-state" class="empty-state" style="display: none;">
-                <p>📭 В базе пока нет инструментов. Добавьте первый инструмент через форму выше!</p>
+                <p>Оборудование не найдено.</p>
             </div>
         </section>
     </main>

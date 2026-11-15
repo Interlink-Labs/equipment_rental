@@ -4,6 +4,8 @@ routers/equipment.py — Эндпоинты для работы с оборуд�
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from math import isfinite
 from typing import List, Optional
 
 from database import get_db
@@ -69,16 +71,44 @@ def create_equipment(item: schemas.EquipmentCreate, db: Session = Depends(get_db
     return new_tool
 
 
-# =======================================================================
-# ЗАДАЧИ ДЛЯ ПАРЫ 1 (Раскомментируйте и допишите логику):
-# =======================================================================
+@router.put("/{equipment_id}", response_model=schemas.EquipmentResponse)
+def update_equipment(
+    equipment_id: int, update_data: schemas.EquipmentUpdate, db: Session = Depends(get_db)
+):
+    """Изменить название, тариф или статус инструмента."""
+    tool = get_equipment_by_id(equipment_id, db)
+    changes = update_data.model_dump(exclude_none=True)
+    if "name" in changes:
+        changes["name"] = changes["name"].strip()
+        if not changes["name"]:
+            raise HTTPException(422, "Укажите название инструмента")
+    if "daily_rate" in changes:
+        rate = changes["daily_rate"]
+        if not isfinite(rate) or rate <= 0:
+            raise HTTPException(422, "Тариф должен быть положительным числом")
+    if "status" in changes:
+        changes["status"] = changes["status"].upper()
+        if changes["status"] not in {"AVAILABLE", "REPAIR"}:
+            raise HTTPException(422, "Допустимые статусы: AVAILABLE и REPAIR")
+        if tool.status == "RENTED":
+            raise HTTPException(409, "Сначала оформите возврат инструмента")
 
-# @router.put("/{equipment_id}", response_model=schemas.EquipmentResponse)
-# def update_equipment(equipment_id: int, update_data: schemas.EquipmentUpdate, db: Session = Depends(get_db)):
-#     """TODO: Пара 1 — Редактирование инструмента (название, тариф или статус)."""
-#     pass
+    for field, value in changes.items():
+        setattr(tool, field, value)
+    db.commit()
+    db.refresh(tool)
+    return tool
 
-# @router.delete("/{equipment_id}", status_code=status.HTTP_204_NO_CONTENT)
-# def delete_equipment(equipment_id: int, db: Session = Depends(get_db)):
-#     """TODO: Пара 1 — Удаление инструмента из базы данных."""
-#     pass
+
+@router.delete("/{equipment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_equipment(equipment_id: int, db: Session = Depends(get_db)):
+    """Удалить инструмент, если с ним не связаны записи об аренде."""
+    tool = get_equipment_by_id(equipment_id, db)
+    if tool.status == "RENTED" or tool.rentals:
+        raise HTTPException(409, "У инструмента есть записи об аренде")
+    db.delete(tool)
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(409, "У инструмента есть связанные записи") from exc
