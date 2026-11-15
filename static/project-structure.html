@@ -67,16 +67,13 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
 .joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
 .joker img{display:block;width:100%;height:auto;filter:drop-shadow(10px 12px 0 #0d0d10)}
 .joker figcaption{text-align:right;font-size:.78rem}
-.project-banner{position:relative;display:grid;grid-template-columns:1fr .72fr;align-items:center;gap:24px;margin-top:44px;padding:clamp(22px,5vw,64px);isolation:isolate;overflow:hidden;border:1px solid #79313e;background:repeating-linear-gradient(135deg,#151418 0 8px,#101014 8px 16px)}
-.project-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#281820,#391923);clip-path:polygon(65% 0,100% 0,100% 100%,47% 100%);z-index:-1}
-.banner-copy h2{font-size:clamp(2.4rem,7.2vw,6rem);line-height:.85;letter-spacing:-.075em;font-style:italic;text-transform:uppercase;margin:0;text-shadow:5px 5px #09090b}
-.banner-copy h2 span{display:block;color:#ff5066}
-.banner-copy p{max-width:29ch;color:#fff;background:#111115;padding:8px 12px;width:fit-content}
+.project-banner{margin-top:44px;padding:22px clamp(16px,4vw,32px);border-top:1px solid #423740;border-left:4px solid var(--red);background:#17171c}
+.banner-copy h2{font-size:clamp(1.5rem,4vw,2.6rem);line-height:1;font-style:italic;text-transform:uppercase;margin:0}
+.banner-copy h2 span{color:#ff5066}
+.banner-copy p{margin:10px 0 16px}
 .banner-links{display:flex;flex-wrap:wrap;gap:10px}
 .banner-links a{padding:10px 20px;color:#161016;background:#f7f4f4;text-decoration:none;font-weight:900;font-style:italic;clip-path:polygon(5% 0,100% 0,95% 100%,0 100%)}
 .banner-links a:hover,.banner-links a:focus-visible{background:#ff4560;color:#120810;outline-offset:-4px}
-.banner-art{width:min(66%,220px);aspect-ratio:1.6;justify-self:center;transform:skewX(-18deg);border:1px solid #83505f;background:linear-gradient(135deg,transparent 65%,#70293c 65%,#70293c 67%,transparent 67%);box-shadow:12px 12px 0 -1px #21151c,12px 12px 0 #613442}
-@media(max-width:620px){.project-banner{grid-template-columns:1fr}.banner-art{display:none}}
 @media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
 </style>
 </head>
@@ -153,7 +150,6 @@ python main.py</code></pre>
       <a href="#quick-start">Быстрый запуск ↑</a>
     </nav>
   </div>
-  <div class="banner-art" aria-hidden="true"></div>
 </section>
 <script>
 document.querySelector('.banner-links a[href="#quick-start"]').addEventListener('click', () => {
