@@ -67,13 +67,6 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
 .joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
 .joker img{display:block;width:100%;height:auto;filter:drop-shadow(10px 12px 0 #0d0d10)}
 .joker figcaption{text-align:right;font-size:.78rem}
-.project-banner{margin-top:44px;padding:22px clamp(16px,4vw,32px);border-top:1px solid #423740;border-left:4px solid var(--red);background:#17171c}
-.banner-copy h2{font-size:clamp(1.5rem,4vw,2.6rem);line-height:1;font-style:italic;text-transform:uppercase;margin:0}
-.banner-copy h2 span{color:#ff5066}
-.banner-copy p{margin:10px 0 16px}
-.banner-links{display:flex;flex-wrap:wrap;gap:10px}
-.banner-links a{padding:10px 20px;color:#161016;background:#f7f4f4;text-decoration:none;font-weight:900;font-style:italic;clip-path:polygon(5% 0,100% 0,95% 100%,0 100%)}
-.banner-links a:hover,.banner-links a:focus-visible{background:#ff4560;color:#120810;outline-offset:-4px}
 @media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
 /* Dark Hour follows the open menu section, including keyboard activation. */
 body{position:relative;isolation:isolate;background:#0d0d10}
@@ -107,6 +100,24 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 }
 @media(prefers-reduced-motion:no-preference){
   .docs-layout:not(:has(details[open])) .joker{animation:menu-cut 300ms ease-out both}
+}
+.quick-links{display:flex;flex-wrap:wrap;gap:8px;align-self:center}
+.quick-links a{display:block;padding:8px 14px;background:#22151d;border-left:3px solid var(--red);color:var(--paper);font-weight:800;font-style:italic;text-decoration:none;text-transform:uppercase}
+.quick-links a:hover,.quick-links a:focus-visible{background:var(--paper);color:#151015}
+.docs-layout:has(details[open]) .quick-links{grid-area:2/1;display:flex}
+@media(min-width:1100px){
+  .docs-layout{--menu-font:clamp(1.9rem,2.7vw,2.4rem)}
+  main>h1{font-size:clamp(2rem,4vw,4.4rem);margin:32px 0 10px}
+  .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,34fr) minmax(0,52fr) minmax(0,14fr);align-items:center;min-height:min(64vh,620px)}
+  .docs-layout:not(:has(details[open])) .joker{grid-area:1/1;align-self:center;scale:1.12;translate:-5%}
+  .docs-layout:not(:has(details[open])) .joker::before{inset:1% -9% 5% -6%;background:linear-gradient(147deg,#f7f4f4 0 32%,#a00b2b 32% 37%,#e32247 37% 73%,#440e22 73%);clip-path:polygon(4% 0,97% 6%,78% 76%,100% 86%,5% 100%,12% 44%,0 34%)}
+  .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/2;z-index:1}
+  .docs-menu summary{rotate:-8deg;transform-origin:left center;white-space:nowrap}
+  .docs-menu details:nth-of-type(2)>summary{rotate:-5deg}
+  .docs-menu details:nth-of-type(3)>summary{rotate:-2deg}
+  .docs-menu:not(:has(details[open])) details{margin:13px 0}
+  .quick-links{grid-area:1/3;display:grid;gap:12px}
+  .docs-layout:not(:has(details[open])) .quick-links a{rotate:-9deg}
 }
 </style>
 </head>
@@ -173,22 +184,12 @@ python main.py</code></pre>
   <img src="./joker.png" alt="Джокер из Persona 5" width="1708" height="1708">
   <figcaption><a href="https://www.ssbwiki.com/File:Joker_SSBU.png">Источник изображения</a></figcaption>
 </figure>
+<nav class="quick-links" aria-label="Быстрые ссылки">
+  <a href="/">Каталог <span aria-hidden="true">↗</span></a>
+  <a href="/docs">Swagger <span aria-hidden="true">↗</span></a>
+  <a href="https://github.com/orgs/Interlink-Labs/projects/6">Команда <span aria-hidden="true">↗</span></a>
+</nav>
 </div>
-<section class="project-banner" aria-labelledby="banner-title">
-  <div class="banner-copy">
-    <h2 id="banner-title">Equipment <span>Rental</span></h2>
-    <p>Аренда IT-оборудования для разработки и тестирования.</p>
-    <nav class="banner-links" aria-label="Ссылки проекта">
-      <a href="/">К каталогу ↗</a>
-      <a href="#quick-start">Быстрый запуск ↑</a>
-    </nav>
-  </div>
-</section>
-<script>
-document.querySelector('.banner-links a[href="#quick-start"]').addEventListener('click', () => {
-  document.getElementById('quick-start').open = true;
-});
-</script>
 </main>
 </body>
 </html>
