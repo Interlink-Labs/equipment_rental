@@ -105,19 +105,24 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 .quick-links a{display:block;padding:8px 14px;background:#22151d;border-left:3px solid var(--red);color:var(--paper);font-weight:800;font-style:italic;text-decoration:none;text-transform:uppercase}
 .quick-links a:hover,.quick-links a:focus-visible{background:var(--paper);color:#151015}
 .docs-layout:has(details[open]) .quick-links{grid-area:2/1;display:flex}
+.docs-layout{--card-height:66px;--menu-font:clamp(.9rem,2.2vw,1.55rem)}
+.docs-menu summary{display:grid;grid-template-columns:38px minmax(0,1fr);grid-template-rows:1fr auto;align-items:center;gap:0 8px;width:100%;min-height:var(--card-height);padding:5px 17px 6px 8px;line-height:1.08;background:#2f1320;color:#fff;clip-path:polygon(0 0,96% 0,100% 100%,3% 100%);border-left:0;box-shadow:inset 0 3px #a91b3d}
+.docs-menu summary::before{display:none}
+.docs-menu summary:hover,.docs-menu details[open]>summary{background:#f7f4f4;color:#110c10;box-shadow:inset 0 4px #ee234c}
+.menu-number{grid-row:1 / 3;justify-self:start;align-self:center;padding:6px 4px;border:1px solid currentColor;rotate:-12deg;color:#ff8ca1}
+details[open] .menu-number,summary:hover .menu-number{color:#a40029}
+.menu-caption{grid-column:2;display:block;padding:3px 5px;background:#9d1236;color:#fff;font-size:.72rem;letter-spacing:.06em;text-align:center;font-style:normal}
+details[open] .menu-caption,summary:hover .menu-caption{background:#141016}
 @media(min-width:1100px){
-  .docs-layout{--menu-font:clamp(1.9rem,2.7vw,2.4rem)}
-  main>h1{font-size:clamp(2rem,4vw,4.4rem);margin:32px 0 10px}
-  .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,34fr) minmax(0,52fr) minmax(0,14fr);align-items:center;min-height:min(64vh,620px)}
-  .docs-layout:not(:has(details[open])) .joker{grid-area:1/1;align-self:center;scale:1.12;translate:-5%}
-  .docs-layout:not(:has(details[open])) .joker::before{inset:1% -9% 5% -6%;background:linear-gradient(147deg,#f7f4f4 0 32%,#a00b2b 32% 37%,#e32247 37% 73%,#440e22 73%);clip-path:polygon(4% 0,97% 6%,78% 76%,100% 86%,5% 100%,12% 44%,0 34%)}
-  .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/2;z-index:1}
-  .docs-menu summary{rotate:-8deg;transform-origin:left center;white-space:nowrap}
-  .docs-menu details:nth-of-type(2)>summary{rotate:-5deg}
-  .docs-menu details:nth-of-type(3)>summary{rotate:-2deg}
-  .docs-menu:not(:has(details[open])) details{margin:13px 0}
-  .quick-links{grid-area:1/3;display:grid;gap:12px}
-  .docs-layout:not(:has(details[open])) .quick-links a{rotate:-9deg}
+  main>h1{font-size:clamp(2.1rem,4vw,4.5rem);margin:30px 0 12px}
+  .docs-layout{--menu-width:37%}
+  .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);position:relative;min-height:min(65vh,580px)}
+  .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/1;z-index:1}
+  .docs-layout:not(:has(details[open])) .joker{grid-area:1/2;align-self:center;width:min(92%,560px);justify-self:center}
+  .docs-layout:not(:has(details[open])) .joker::before{inset:-8% -8% 0 -6%;background:linear-gradient(145deg,#a3173a 0 47%,#f8f4f5 47% 80%,#ff2d54 80%);clip-path:polygon(51% 0,100% 0,100% 45%,27% 100%,0 81%,29% 42%)}
+  .docs-layout:not(:has(details[open])) .quick-links{grid-area:2/2;justify-self:end}
+  .docs-layout:has(details[open]){--menu-row:calc(var(--card-height) + 11px)}
+  .docs-menu:has(details[open]) summary{width:var(--menu-width)}
 }
 </style>
 </head>
@@ -127,7 +132,7 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 <h1>Документация</h1>
 <div class="docs-layout"><div class="docs-menu">
 <details name="documentation">
-<summary>Возможности</summary>
+<summary><span class="menu-number" aria-hidden="true">I</span><span>Возможности</span><small class="menu-caption">Разделы системы</small></summary>
 <div class="panel"><h2>Возможности проекта</h2>
 <div class="grid">
 <article><h3>Оборудование</h3><p>Каталог с дневными тарифами и инвентарными номерами.</p></article>
@@ -139,7 +144,7 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 </div>
 </details>
 <details name="documentation" id="quick-start">
-<summary>Быстрый запуск</summary>
+<summary><span class="menu-number" aria-hidden="true">II</span><span>Быстрый запуск</span><small class="menu-caption">Установка и запуск</small></summary>
 <div class="panel"><h2>Быстрый запуск</h2>
 <p>Откройте терминал в папке проекта и создайте виртуальное окружение.</p>
 <pre><code>python -m venv venv</code></pre>
@@ -156,7 +161,7 @@ python main.py</code></pre>
 </div>
 </details>
 <details name="documentation">
-<summary>Структура проекта</summary>
+<summary><span class="menu-number" aria-hidden="true">III</span><span>Структура проекта</span><small class="menu-caption">Файлы и модули</small></summary>
 <div class="panel"><h2>Структура проекта</h2>
 <section class="grid" aria-label="Модули проекта">
     <article><h2>Запуск</h2><p>Точка входа FastAPI и зависимости.</p><ul>
