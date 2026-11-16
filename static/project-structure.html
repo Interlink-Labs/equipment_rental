@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Документация · Equipment Rental</title>
+<link rel="icon" href="./equipment-rental-logo.svg" type="image/svg+xml">
 <style>
 :root{color-scheme:dark;--red:#ff3857;--ink:#0d0d10;--paper:#f7f4f4;--muted:#d2c6cc;font-family:"Segoe UI",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
 *{box-sizing:border-box}
@@ -65,7 +66,7 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
 .docs-menu{min-width:0}
 .joker{position:relative;align-self:start;margin:0;isolation:isolate}
 .joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
-.joker img{display:block;width:100%;height:auto;filter:drop-shadow(8px 10px 0 var(--page-bg))}
+.joker img{display:block;width:100%;height:auto;filter:drop-shadow(9px 11px 0 var(--page-bg))}
 @media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
 /* Dark Hour follows the open menu section, including keyboard activation. */
 body{--page-bg:#0d0d10;position:relative;isolation:isolate;background:var(--page-bg)}
@@ -118,16 +119,21 @@ details[open] .menu-caption,summary:hover .menu-caption{background:#141016}
   .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);position:relative;min-height:min(65vh,580px)}
   .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/1;z-index:1}
   .docs-layout:not(:has(details[open])) .joker{grid-area:1/2;align-self:center;width:min(92%,560px);justify-self:center}
-  .docs-layout:not(:has(details[open])) .joker::before{inset:-8% -8% 0 -6%;background:linear-gradient(145deg,#a3173a 0 47%,#f8f4f5 47% 80%,#ff2d54 80%);clip-path:polygon(51% 0,100% 0,100% 45%,27% 100%,0 81%,29% 42%)}
+  .docs-layout:not(:has(details[open])) .joker::before{inset:-8% -8% 0 -6%;background:linear-gradient(145deg,#c3163d 0 51%,#f8f4f5 51% 75%,#ff2d54 75%);clip-path:polygon(43% 4%,100% 0,92% 52%,25% 98%,4% 78%,19% 51%)}
   .docs-layout:not(:has(details[open])) .quick-links{grid-area:2/2;justify-self:end}
   .docs-layout:has(details[open]){--menu-row:calc(var(--card-height) + 11px)}
   .docs-menu:has(details[open]) summary{width:var(--menu-width)}
 }
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--paper)}
+.brand .brand-copy{color:var(--paper)}
+.brand small{display:block;margin-top:3px;color:var(--muted);font-size:.68rem;letter-spacing:.015em;text-transform:none}
+.joker::after{content:"";position:absolute;inset:0 -7% 2% -4%;background:#79304a;clip-path:polygon(49% 2%,100% 5%,93% 54%,31% 100%,15% 87%,28% 85%,85% 48%,91% 12%,46% 11%);z-index:-2}
+@media(prefers-reduced-motion:no-preference){.joker::after{animation:panel-cut 440ms ease-out both}}
 </style>
 </head>
 <body>
 <main>
-<header><div class="brand"><span>Equipment</span> Rental</div><a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a></header>
+<header><a class="brand" href="/" aria-label="Equipment Rental — каталог"><img src="./equipment-rental-logo.svg" width="48" height="48" alt=""><span class="brand-copy"><span>Equipment</span> Rental<small>Аренда для компьютерных клубов</small></span></a><a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a></header>
 <h1>Документация</h1>
 <div class="docs-layout"><div class="docs-menu">
 <details name="documentation">

@@ -1,10 +1,12 @@
 <div align="center">
 
+<img src="./static/equipment-rental-logo.svg" width="84" alt="Логотип Equipment Rental">
+
 # Equipment Rental
 
-**Аренда оборудования для разработки**
+**Аренда оборудования для компьютерных клубов**
 
-Каталог ноутбуков, рабочих станций и плат для программирования и тестирования.
+Каталог компьютеров, мониторов и периферии для клубов.
 
 ![Python](https://img.shields.io/badge/Python-29352F?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-38594A?style=for-the-badge&logo=fastapi&logoColor=white)
