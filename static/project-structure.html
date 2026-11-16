@@ -65,11 +65,10 @@ dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywh
 .docs-menu{min-width:0}
 .joker{position:relative;align-self:start;margin:0;isolation:isolate}
 .joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
-.joker img{display:block;width:100%;height:auto;filter:drop-shadow(10px 12px 0 #0d0d10)}
-.joker figcaption{text-align:right;font-size:.78rem}
+.joker img{display:block;width:100%;height:auto;filter:drop-shadow(8px 10px 5px var(--page-bg))}
 @media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
 /* Dark Hour follows the open menu section, including keyboard activation. */
-body{position:relative;isolation:isolate;background:#0d0d10}
+body{--page-bg:#0d0d10;position:relative;isolation:isolate;background:var(--page-bg)}
 body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;background:linear-gradient(147deg,transparent 52%,#2d141e 52%,#2d141e 67%,transparent 67%);transform:translateY(var(--stripe-shift,0px)) rotate(var(--stripe-angle,0deg));transform-origin:50% 50%}
 body:has(.docs-menu details[open]){background:#050407}
 body:has(.docs-menu details[open])::before{opacity:.65}
@@ -105,7 +104,7 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 .quick-links a{display:block;padding:8px 14px;background:#22151d;border-left:3px solid var(--red);color:var(--paper);font-weight:800;font-style:italic;text-decoration:none;text-transform:uppercase}
 .quick-links a:hover,.quick-links a:focus-visible{background:var(--paper);color:#151015}
 .docs-layout:has(details[open]) .quick-links{grid-area:2/1;display:flex}
-.docs-layout{--card-height:66px;--menu-font:clamp(.9rem,2.2vw,1.55rem)}
+.docs-layout{--card-height:82px;--menu-font:clamp(1rem,2.5vw,1.85rem)}
 .docs-menu summary{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:1fr auto;align-items:center;gap:0 8px;width:100%;min-height:var(--card-height);padding:5px 17px 6px 8px;line-height:1.08;background:#2f1320;color:#fff;clip-path:polygon(0 0,96% 0,100% 100%,3% 100%);border-left:0;box-shadow:inset 0 3px #a91b3d}
 .docs-menu summary::before{display:none}
 .docs-menu summary:hover,.docs-menu details[open]>summary{background:#f7f4f4;color:#110c10;box-shadow:inset 0 4px #ee234c}
@@ -115,7 +114,7 @@ body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-
 details[open] .menu-caption,summary:hover .menu-caption{background:#141016}
 @media(min-width:1100px){
   main>h1{font-size:clamp(2.1rem,4vw,4.5rem);margin:30px 0 12px}
-  .docs-layout{--menu-width:37%}
+  .docs-layout{--menu-width:46%}
   .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);position:relative;min-height:min(65vh,580px)}
   .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/1;z-index:1}
   .docs-layout:not(:has(details[open])) .joker{grid-area:1/2;align-self:center;width:min(92%,560px);justify-self:center}
@@ -187,7 +186,6 @@ python main.py</code></pre>
 </div>
 <figure class="joker">
   <img src="./joker.png" alt="Джокер из Persona 5" width="1708" height="1708">
-  <figcaption><a href="https://www.ssbwiki.com/File:Joker_SSBU.png">Источник изображения</a></figcaption>
 </figure>
 <nav class="quick-links" aria-label="Быстрые ссылки">
   <a href="/">Каталог <span aria-hidden="true">↗</span></a>
