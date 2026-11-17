@@ -103,3 +103,85 @@ input::placeholder{color:#a99ca5}
     from{opacity:0;transform:translateX(-14px) skewX(-7deg)}
     to{opacity:1;transform:none}
 }
+
+/* Decorative layers for the catalog. They sit outside the controls. */
+body {
+    isolation: isolate;
+    background: #0d0b0e;
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(146deg, transparent 39%, #2d101d 39% 52%, transparent 52%),
+        repeating-linear-gradient(146deg, transparent 0 34px, #91234024 34px 35px, transparent 35px 52px);
+    mask-image: linear-gradient(#000, #0009);
+}
+.hero {
+    box-shadow: 8px 8px 0 #4e1025;
+}
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: #ff4c69;
+    clip-path: polygon(100% 0, 100% 12%, 92% 0);
+}
+.hero-photo {
+    object-position: 62% center;
+}
+.card {
+    position: relative;
+    background-image: linear-gradient(155deg, #35172688, transparent 60%);
+}
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto auto;
+    width: 54px;
+    height: 16px;
+    pointer-events: none;
+    background: #ba2248;
+    clip-path: polygon(32% 0, 100% 0, 100% 100%, 0 100%);
+}
+.table thead {
+    border-bottom: 2px solid #c52a50;
+}
+.table tbody tr:nth-child(even) {
+    background: #20151e;
+}
+.footer {
+    margin-top: 20px;
+    border-top: 1px solid #5b3544;
+}
+@media (max-width: 760px) {
+    .hero { box-shadow: 4px 4px 0 #4e1025; }
+    .hero::after { clip-path: polygon(100% 0, 100% 7%, 89% 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+    body::before { animation: persona-backdrop 760ms cubic-bezier(.16, 1, .3, 1) both; }
+    .hero-photo { animation: persona-photo 650ms cubic-bezier(.2, .8, .2, 1) both; }
+    .hero::after, .card::after { animation: persona-flash 600ms ease-out both; }
+    .form-section::after { animation-delay: 100ms; }
+    .list-section::after { animation-delay: 200ms; }
+    .form-section h2, .list-section h2 { animation: catalog-cut 360ms ease-out both; }
+    .list-section h2 { animation-delay: 100ms; }
+}
+@keyframes persona-backdrop {
+    from { opacity: 0; translate: 0 -5vh; }
+    to { opacity: 1; translate: 0 0; }
+}
+@keyframes persona-photo {
+    from { opacity: .2; filter: grayscale(1) contrast(1.35); }
+    to { opacity: 1; filter: grayscale(.72) contrast(1.12); }
+}
+@keyframes persona-flash {
+    from { opacity: 0; scale: .65 1; }
+    45% { opacity: 1; }
+    to { opacity: 1; scale: 1; }
+}
