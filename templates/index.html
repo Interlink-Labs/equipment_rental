@@ -49,6 +49,25 @@
             <div class="club-registers" aria-label="Журналы клуба">
                 <details class="card club-register" data-register="rentals" open>
                     <summary>Аренды и брони</summary>
+                    <form id="rental-form" class="rental-form">
+                        <div class="form-grid">
+                            <div class="form-group"><label for="rental-equipment">Оборудование</label>
+                                <select id="rental-equipment" name="equipment_id" required></select>
+                            </div>
+                            <div class="form-group"><label for="rental-client">Клиент</label>
+                                <select id="rental-client" name="client_id" required></select>
+                            </div>
+                            <div class="form-group"><label for="rental-start">Начало</label>
+                                <input id="rental-start" type="date" name="start_date" required>
+                            </div>
+                            <div class="form-group"><label for="rental-end">Окончание</label>
+                                <input id="rental-end" type="date" name="end_date" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit" value="rent" disabled>Оформить аренду</button>
+                        <button class="btn btn-secondary" type="submit" value="book" disabled>Оформить бронь</button>
+                        <p id="rental-message" role="status">Загружаем оборудование и клиентов…</p>
+                    </form>
                     <p role="status">Загружаем журнал…</p>
                     <div class="table-responsive" hidden><table class="table" aria-label="Аренды и брони">
                         <thead><tr><th>Оборудование</th><th>Клиент</th><th>Период</th><th>Сумма</th><th>Статус</th></tr></thead>
@@ -146,5 +165,6 @@
     <script src="/static/app.js?v=equipment-search"></script>
     <script src="/static/club-showcase.js"></script>
     <script src="/static/club-registers.js"></script>
+    <script src="/static/rental-actions.js?v=1"></script>
 </body>
 </html>
