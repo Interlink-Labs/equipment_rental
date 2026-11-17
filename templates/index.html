@@ -4,30 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Rental — Учет аренды оборудования</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/design.css?v=persona5">
 </head>
 <body>
     <header class="navbar">
         <div class="container navbar-content">
             <div class="logo">
-                <span class="icon">🛠️</span>
-                <h1>Equipment Rental</h1>
+                <span class="icon" aria-hidden="true">&lt;/&gt;</span>
+                <span>Equipment Rental</span>
             </div>
-            <nav>
-                <a href="/docs" target="_blank" class="nav-link docs-badge">📖 Swagger API Docs</a>
+            <nav class="site-nav" aria-label="Навигация"><a class="nav-link" href="/static/project-structure.html">Документация ↗</a>
+                <a href="/docs" target="_blank" class="nav-link docs-badge">Swagger API ↗</a>
             </nav>
         </div>
     </header>
 
     <main class="container">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <h1 id="hero-title">Аренда оборудования<br><span>для разработки</span></h1>
+                <p>Ноутбуки, рабочие станции и платы для программирования и тестирования.</p>
+                <a class="btn btn-primary" href="#equipment">К каталогу <span aria-hidden="true">↘</span></a>
+            </div>
+            <img class="hero-photo" src="/static/dev-workstation.jpg" alt="Ноутбук с редактором кода, клавиатура и одноплатный компьютер" fetchpriority="high">
+        </section>
         <!-- Блок добавления оборудования -->
-        <section class="card form-section">
-            <h2>➕ Добавить новый инструмент</h2>
+        <section class="card form-section" id="add-equipment">
+            <h2>Добавить оборудование</h2>
             <form id="add-equipment-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="name">Название инструмента</label>
-                        <input type="text" id="name" placeholder="Напр. Перфоратор Bosch 2-26" required>
+                        <label for="name">Название оборудования</label>
+                        <input type="text" id="name" placeholder="Напр. Ноутбук Lenovo ThinkPad" required>
                     </div>
                     <div class="form-group">
                         <label for="inv-number">Инвентарный номер</label>
@@ -38,25 +46,29 @@
                         <input type="number" id="rate" step="0.01" min="1" placeholder="Напр. 750" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" id="btn-submit">Сохранить инструмент</button>
+                <button type="submit" class="btn btn-primary" id="btn-submit">Добавить в каталог</button>
                 <div id="form-message" class="message"></div>
             </form>
         </section>
 
         <!-- Блок со списком оборудования -->
-        <section class="card list-section">
+        <section class="card list-section" id="equipment">
             <div class="section-header">
-                <h2>📋 Оборудование</h2>
-                <label for="equipment-status-filter">Статус</label>
+                <h2>Каталог оборудования</h2>
+                <div class="status-control"><label for="equipment-status-filter">Статус</label>
                 <select id="equipment-status-filter">
                     <option value="">Все</option>
                     <option value="AVAILABLE">Доступен</option>
                     <option value="RENTED">В аренде</option>
                     <option value="REPAIR">В ремонте</option>
-                </select>
-                <button class="btn btn-secondary" id="btn-refresh">🔄 Обновить список</button>
+                </select></div>
+                <button class="btn btn-secondary" id="btn-refresh">Обновить ↻</button>
             </div>
             
+            <div class="form-group">
+                <label for="equipment-search">Поиск оборудования</label>
+                <input type="search" id="equipment-search" placeholder="Название или инвентарный номер">
+            </div>
             <div id="loading" class="loading">Загрузка данных...</div>
 
             <div class="table-responsive">
@@ -88,6 +100,6 @@
         <p>Equipment Rental • Учебный проект команды из 8 разработчиков • FastAPI + SQLite</p>
     </footer>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=equipment-search"></script>
 </body>
 </html>
