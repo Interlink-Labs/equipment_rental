@@ -25,6 +25,19 @@
             const rows = records.map(record => {
                 const row = document.createElement('tr');
                 columns[key](record).forEach(value => { row.insertCell().textContent = value ?? '—'; });
+                if (key === 'rentals') {
+                    const cell = row.insertCell();
+                    if (record.status === 'ACTIVE') {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'btn btn-secondary';
+                        button.dataset.returnRental = record.id;
+                        button.textContent = 'Вернуть';
+                        cell.append(button);
+                    } else {
+                        cell.textContent = '—';
+                    }
+                }
                 return row;
             });
             section.querySelector('tbody').replaceChildren(...rows);

@@ -221,3 +221,9 @@ body::before {
 @media(prefers-reduced-motion:no-preference) {
     .club-register[open] .table-responsive { animation:club-reveal 240ms ease-out both }
 }
+
+.rental-form { margin: 0 0 18px; padding: 14px; border: 1px solid var(--line); background: #181018; }
+.rental-form .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rental-form .btn { margin: 0 6px 6px 0; }
+#rental-message { margin: 4px 0 0; min-height: 1.5em; }
+@media (max-width: 550px) { .rental-form .form-grid { grid-template-columns: 1fr; } }
