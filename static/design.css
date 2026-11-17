@@ -185,3 +185,39 @@ body::before {
     45% { opacity: 1; }
     to { opacity: 1; scale: 1; }
 }
+
+/* Club rental showcase and management layout */
+.club-label{margin:0 0 8px;color:#ff8ba3;font-size:.77rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.club-showcase h2,.club-admin-heading h2{margin:0 0 12px}
+.club-categories,.club-stock{display:grid;gap:12px;padding:0;list-style:none}
+.club-categories{grid-template-columns:repeat(3,minmax(0,1fr));margin:20px 0 28px}
+.club-categories li,.club-stock li{padding:16px;border:1px solid #5b3544;background:#171218}
+.club-categories li{border-top:3px solid #e82b51}
+.club-categories h3{margin:8px 0 6px}
+.club-categories p,#club-stock-message{color:var(--muted);line-height:1.5}
+.club-code{display:inline-block;padding:4px 8px;background:#682138;color:#fff;font-weight:800;font-style:italic;clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}
+.club-stock{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));margin:12px 0 0}
+.club-stock[hidden]{display:none}
+.club-stock li{display:grid;gap:7px;overflow-wrap:anywhere}
+.club-stock span{color:#ff9fb3}
+.club-admin{display:grid;gap:16px}
+.club-admin-heading{padding:18px 24px 8px;border-bottom:1px solid #5b3544}
+.club-admin .card h2{font-size:clamp(1.2rem,2vw,1.65rem)}
+@media(max-width:680px){.club-categories{grid-template-columns:1fr}.club-admin-heading{padding-inline:8px}}
+@media(prefers-reduced-motion:no-preference){
+    .club-categories li{animation:club-reveal 420ms ease-out both}
+    .club-categories li:nth-child(2){animation-delay:65ms}
+    .club-categories li:nth-child(3){animation-delay:130ms}
+}
+@keyframes club-reveal{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
+
+.club-registers { display:grid;gap:10px }
+.club-register { padding:12px clamp(14px,3vw,24px);min-width:0 }
+.club-register summary { cursor:pointer;font-size:1.15rem;font-weight:850;font-style:italic;text-transform:uppercase }
+.club-register summary::marker { color:#ff5270 }
+.club-register[open] summary { margin-bottom:12px }
+.club-register p { color:var(--muted) }
+.club-register td:last-child { white-space:normal }
+@media(prefers-reduced-motion:no-preference) {
+    .club-register[open] .table-responsive { animation:club-reveal 240ms ease-out both }
+}

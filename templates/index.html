@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Rental — Учет аренды оборудования</title>
-    <link rel="stylesheet" href="/static/design.css?v=persona-motion">
+    <link rel="stylesheet" href="/static/design.css?v=club-registers">
 </head>
 <body>
     <header class="navbar">
@@ -22,12 +22,54 @@
     <main class="container">
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-copy">
-                <h1 id="hero-title">Аренда оборудования<br><span>для разработки</span></h1>
-                <p>Ноутбуки, рабочие станции и платы для программирования и тестирования.</p>
+                <h1 id="hero-title">Аренда техники<br><span>для компьютерных клубов</span></h1>
+                <p>Игровые ПК, мониторы и периферия для клуба, турнира или временного расширения зала.</p>
                 <a class="btn btn-primary" href="#equipment">К каталогу <span aria-hidden="true">↘</span></a>
             </div>
-            <img class="hero-photo" src="/static/dev-workstation.jpg" alt="Ноутбук с редактором кода, клавиатура и одноплатный компьютер" fetchpriority="high">
+            <img class="hero-photo" src="/static/dev-workstation.jpg" alt="Рабочее место с компьютером и клавиатурой" fetchpriority="high">
         </section>
+        <section class="card club-showcase" aria-labelledby="showcase-title">
+            <p class="club-label">Для клиента</p>
+            <h2 id="showcase-title">Оборудование для клуба</h2>
+            <ul class="club-categories">
+                <li><span class="club-code" aria-hidden="true">PC</span><h3>Игровые ПК</h3><p>Системные блоки для игровых мест и турниров.</p></li>
+                <li><span class="club-code" aria-hidden="true">Hz</span><h3>Мониторы</h3><p>Экраны для игровых станций и временных площадок.</p></li>
+                <li><span class="club-code" aria-hidden="true">I/O</span><h3>Периферия</h3><p>Клавиатуры, мыши и гарнитуры для комплектации мест.</p></li>
+            </ul>
+            <h3 id="club-stock-title">Сейчас доступно</h3>
+            <p id="club-stock-message" role="status">Загружаем оборудование…</p>
+            <ul class="club-stock" id="club-stock" aria-labelledby="club-stock-title" hidden></ul>
+        </section>
+
+        <section class="club-admin" aria-labelledby="admin-title">
+            <header class="club-admin-heading">
+                <p class="club-label">Для администратора</p>
+                <h2 id="admin-title">Управление оборудованием</h2>
+            </header>
+            <div class="club-registers" aria-label="Журналы клуба">
+                <details class="card club-register" data-register="rentals" open>
+                    <summary>Аренды и брони</summary>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Аренды и брони">
+                        <thead><tr><th>Оборудование</th><th>Клиент</th><th>Период</th><th>Сумма</th><th>Статус</th></tr></thead>
+                        <tbody></tbody>
+                    </table></div>
+                </details>
+                <details class="card club-register" data-register="clients">
+                    <summary>Клиенты</summary>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Клиенты">
+                        <thead><tr><th>ID</th><th>ФИО</th></tr></thead><tbody></tbody>
+                    </table></div>
+                </details>
+                <details class="card club-register" data-register="employers">
+                    <summary>Сотрудники</summary>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Сотрудники">
+                        <thead><tr><th>ФИО</th><th>Роль</th><th>Статус</th></tr></thead><tbody></tbody>
+                    </table></div>
+                </details>
+            </div>
         <!-- Блок добавления оборудования -->
         <section class="card form-section" id="add-equipment">
             <h2>Добавить оборудование</h2>
@@ -35,7 +77,7 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="name">Название оборудования</label>
-                        <input type="text" id="name" placeholder="Напр. Ноутбук Lenovo ThinkPad" required>
+                        <input type="text" id="name" placeholder="Напр. Монитор 144 Гц" required>
                     </div>
                     <div class="form-group">
                         <label for="inv-number">Инвентарный номер</label>
@@ -94,6 +136,7 @@
                 <p>Оборудование не найдено.</p>
             </div>
         </section>
+        </section>
     </main>
 
     <footer class="footer">
@@ -101,5 +144,7 @@
     </footer>
 
     <script src="/static/app.js?v=equipment-search"></script>
+    <script src="/static/club-showcase.js"></script>
+    <script src="/static/club-registers.js"></script>
 </body>
 </html>
