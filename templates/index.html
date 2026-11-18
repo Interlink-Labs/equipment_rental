@@ -5,44 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Rental — Учет аренды оборудования</title>
     <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аренда оборудования</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <!-- Базовые стили на случай, если static/style.css отсутствует или неполный.
+       Если у вас уже есть полноценный CSS — этот блок можно удалить. -->
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f5f6f8; color: #222;
+    }
+    header {
+      background: #1f2937; color: #fff;
+      padding: 16px 24px;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    section {
+      background: #fff; border-radius: 8px;
+      padding: 20px 24px; margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    section h2 { margin-top: 0; font-size: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+    section h3 { font-size: 17px; margin-top: 24px; }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 12px;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 8px 10px; text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th { background: #f9fafb; font-weight: 600; }
+    form label {
+      display: block; margin: 10px 0 4px;
+      font-size: 14px; font-weight: 500;
+    }
+    form input, form select {
+      width: 100%; max-width: 360px;
+      padding: 8px 10px; font-size: 14px;
+      border: 1px solid #d1d5db; border-radius: 6px;
+    }
+    form button {
+      margin-top: 12px;
+      padding: 9px 18px; font-size: 14px; font-weight: 600;
+      color: #fff; background: #2563eb;
+      border: none; border-radius: 6px; cursor: pointer;
+    }
+    form button:hover { background: #1d4ed8; }
+    button.btn-secondary {
+      padding: 6px 12px; font-size: 13px;
+      color: #fff; background: #dc2626;
+      border: none; border-radius: 4px; cursor: pointer;
+    }
+    button.btn-secondary:hover { background: #b91c1c; }
+    .message { margin-top: 10px; font-size: 14px; display: none; }
+    .message.success { color: #059669; }
+    .message.error   { color: #dc2626; }
+    #rentals-loading, #equipment-loading {
+      font-size: 14px; color: #6b7280; margin: 10px 0;
+    }
+    #rentals-empty, #equipment-empty {
+      font-size: 14px; color: #6b7280; margin: 10px 0;
+    }
+    .status-active    { color: #059669; font-weight: 600; }
+    .status-returned  { color: #6b7280; }
+    .status-reserved  { color: #d97706; font-weight: 600; }
+    .status-available { color: #059669; }
+    .status-rented    { color: #dc2626; }
+  </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="container navbar-content">
-            <div class="logo">
-                <span class="icon">🛠️</span>
-                <h1>Equipment Rental</h1>
-            </div>
-            <nav>
-                <a href="/docs" target="_blank" class="nav-link docs-badge">📖 Swagger API Docs</a>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <h1>🏗️ Аренда оборудования</h1>
+  </header>
 
-    <main class="container">
-        <!-- Блок добавления оборудования -->
-        <section class="card form-section">
-            <h2>➕ Добавить новый инструмент</h2>
-            <form id="add-equipment-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">Название инструмента</label>
-                        <input type="text" id="name" placeholder="Напр. Перфоратор Bosch 2-26" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="inv-number">Инвентарный номер</label>
-                        <input type="text" id="inv-number" placeholder="Напр. INV-001" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="rate">Тариф в сутки (руб.)</label>
-                        <input type="number" id="rate" step="0.01" min="1" placeholder="Напр. 750" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary" id="btn-submit">Сохранить инструмент</button>
-                <div id="form-message" class="message"></div>
-            </form>
-        </section>
+  <main>
 
+<<<<<<< Updated upstream
         <!-- Блок со списком оборудования -->
         <section class="card list-section">
             <div class="section-header">
@@ -74,11 +118,107 @@
             </div>
         </section>
     </main>
+=======
+    <!-- ==================== ОБОРУДОВАНИЕ ==================== -->
+    <section id="equipment-section">
+      <h2>Оборудование</h2>
 
-    <footer class="footer">
-        <p>Equipment Rental • Учебный проект команды из 8 разработчиков • FastAPI + SQLite</p>
-    </footer>
+      <div id="equipment-loading" style="display:none;">Загрузка оборудования…</div>
+      <p id="equipment-empty" style="display:none;">Оборудования пока нет.</p>
 
-    <script src="/static/app.js"></script>
+      <table id="equipment-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Цена/день</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody id="equipment-list"></tbody>
+      </table>
+>>>>>>> Stashed changes
+
+      <h3>Добавить оборудование</h3>
+      <form id="equipment-form">
+        <label>Название
+          <input type="text" id="equipment-name" required>
+        </label>
+        <label>Категория
+          <input type="text" id="equipment-category" required>
+        </label>
+        <label>Цена за день (₽)
+          <input type="number" id="equipment-price" min="0" step="0.01" required>
+        </label>
+        <button type="submit">Добавить</button>
+        <p id="equipment-message" class="message"></p>
+      </form>
+    </section>
+
+    <!-- ==================== АРЕНДЫ И БРОНИ ==================== -->
+    <section id="rentals-section">
+      <h2>Аренды и брони</h2>
+
+      <div id="rentals-loading" style="display:none;">Загрузка аренд…</div>
+      <p id="rentals-empty" style="display:none;">Аренд не найдено.</p>
+
+      <table id="rentals-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Инструмент</th>
+            <th>Клиент</th>
+            <th>Даты</th>
+            <th>Стоимость</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody id="rentals-list"></tbody>
+      </table>
+
+      <!-- Форма оформления аренды -->
+      <h3>Оформить аренду</h3>
+      <form id="rental-form">
+        <label>Инструмент
+          <select id="rental-equipment" required></select>
+        </label>
+        <label>Клиент
+          <select id="rental-client" required></select>
+        </label>
+        <label>Дата начала
+          <input type="date" id="rental-start" required>
+        </label>
+        <label>Дата окончания
+          <input type="date" id="rental-end" required>
+        </label>
+        <button type="submit">Оформить аренду</button>
+        <p id="rental-message" class="message"></p>
+      </form>
+
+      <!-- Форма оформления брони -->
+      <h3>Оформить бронь</h3>
+      <form id="booking-form">
+        <label>Инструмент
+          <select id="booking-equipment" required></select>
+        </label>
+        <label>Клиент
+          <select id="booking-client" required></select>
+        </label>
+        <label>Дата начала
+          <input type="date" id="booking-start" required>
+        </label>
+        <label>Дата окончания
+          <input type="date" id="booking-end" required>
+        </label>
+        <button type="submit">Оформить бронь</button>
+        <p id="booking-message" class="message"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
 </body>
 </html>
