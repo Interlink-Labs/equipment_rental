@@ -34,6 +34,20 @@
         document.getElementById('btn-refresh').click();
     }
 
+    section.addEventListener('click', async event => {
+        const button = event.target.closest('button[data-return-rental]');
+        if (!button || button.disabled || !window.confirm('Отметить оборудование как возвращённое?')) return;
+        button.disabled = true;
+        try {
+            await sendRental('/rentals/' + button.dataset.returnRental + '/return');
+            message.textContent = 'Оборудование возвращено.';
+            refreshRentalViews();
+        } catch (error) {
+            message.textContent = error.message;
+            button.disabled = false;
+        }
+    });
+
     form.addEventListener('submit', async event => {
         event.preventDefault();
         const submitter = event.submitter;
