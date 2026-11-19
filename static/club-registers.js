@@ -40,6 +40,7 @@
 
     document.querySelectorAll('[data-register]').forEach(section => {
         section.addEventListener('toggle', () => loadRegister(section));
+        section.addEventListener('rental-updated', () => loadRegister(section));
         loadRegister(section);
     });
 })();
