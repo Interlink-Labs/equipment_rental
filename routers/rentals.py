@@ -142,12 +142,24 @@ def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get
 # ЗАДАЧИ ДЛЯ ПАРЫ 3 (Допишите ручки):
 # =======================================================================
 
-# @router.post("/{rental_id}/return", response_model=schemas.RentalResponse)
-# def return_equipment(rental_id: int, db: Session = Depends(get_db)):
-#     """
-#     TODO: Пара 3 — Возврат оборудования.
-#     1. Найти аренду по rental_id.
-#     2. Перевести статус аренды в 'RETURNED'.
-#     3. Найти связанный инструмент и вернуть ему статус 'AVAILABLE'.
-#     """
-#     pass
+@router.post("/{rental_id}/return", response_model=schemas.RentalResponse)
+def return_equipment(rental_id: int, db: Session = Depends(get_db)):
+    """Закрыть активную аренду и обновить статус оборудования."""
+    updated = db.query(models.Rental).filter_by(id=rental_id, status="ACTIVE").update(
+        {"status": "RETURNED"}
+    )
+    rental = db.get(models.Rental, rental_id)
+    if rental is None:
+        raise HTTPException(404, "Аренда не найдена")
+    if not updated and rental.status != "RETURNED":
+        raise HTTPException(409, "Вернуть можно только оборудование из активной аренды")
+
+    if updated:
+        other_active = db.query(models.Rental).filter_by(
+            equipment_id=rental.equipment_id, status="ACTIVE"
+        ).first()
+        if other_active is None and rental.equipment.status == "RENTED":
+            rental.equipment.status = "AVAILABLE"
+        db.commit()
+        db.refresh(rental)
+    return rental
