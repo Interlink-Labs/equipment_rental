@@ -52,6 +52,12 @@ def read_root():
 # Позволяет запускать сервер кнопкой "Play" (Run) в VS Code или командой "python main.py"
 if __name__ == "__main__":
     import uvicorn
+    from bootstrap_admin import create_initial_admin
+    credentials = create_initial_admin()
+    if credentials:
+        print("\nПервый администратор создан. Сохраните данные для входа.")
+        print(f"Логин: {credentials[0]}")
+        print(f"Пароль: {credentials[1]}\n")
     print("\n🚀 Сервер запускается на http://127.0.0.1:8000")
     print("📖 Документация Swagger доступна на http://127.0.0.1:8000/docs\n")
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
