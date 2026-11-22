@@ -103,3 +103,36 @@ class RentalResponse(RentalCreate):
 # Аренды: клиент обычного пользователя определяется из JWT.
 class RentalBooking(RentalCreate):
     client_id: Optional[int] = None
+
+
+# Пара клиентов — проверка новых данных, существующие записи читаются без изменений.
+import re
+from pydantic import Field, field_validator
+
+def normalize_client_phone(value: str) -> str:
+    digits = re.sub(r"[\s()+-]", "", value)
+    if not re.fullmatch(r"[78]\d{10}", digits):
+        raise ValueError("Введите российский телефон в формате +7-XXX-XXX-XX-XX")
+    return f"+7-{digits[1:4]}-{digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
+
+class ClientUpdate(BaseModel):
+    full_name: Optional[str] = Field(default=None, min_length=1, max_length=150)
+    phone: Optional[str] = None
+
+    @field_validator("full_name")
+    @classmethod
+    def validate_name(cls, value):
+        if value is None or not value.strip():
+            raise ValueError("Укажите ФИО")
+        return value.strip()
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, value):
+        if value is None:
+            raise ValueError("Укажите телефон")
+        return normalize_client_phone(value)
+
+class ClientCreateValidated(ClientUpdate):
+    full_name: str
+    phone: str
