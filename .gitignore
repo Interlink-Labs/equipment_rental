@@ -20,3 +20,5 @@ equipment_rental.db
 
 # Логи и временные файлы
 *.log
+
+.jwt-secret

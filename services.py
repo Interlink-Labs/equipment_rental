@@ -35,7 +35,7 @@ def is_equipment_available_for_dates(
     """
     overlapping_rental = db.query(models.Rental).filter(
         models.Rental.equipment_id == equipment_id,
-        models.Rental.status == "ACTIVE",
+        models.Rental.status.in_(("ACTIVE", "RESERVED")),
         models.Rental.start_date <= end_date,
         models.Rental.end_date >= start_date
     ).first()

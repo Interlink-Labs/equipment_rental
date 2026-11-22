@@ -4,30 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Rental — Учет аренды оборудования</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/design.css?v=rental-actions">
+<style>[hidden]{display:none!important} body:not(.signed-in) .club-admin{display:none}</style>
 </head>
 <body>
     <header class="navbar">
         <div class="container navbar-content">
             <div class="logo">
-                <span class="icon">🛠️</span>
-                <h1>Equipment Rental</h1>
+                <span class="icon" aria-hidden="true">&lt;/&gt;</span>
+                <span>Equipment Rental</span>
             </div>
-            <nav>
-                <a href="/docs" target="_blank" class="nav-link docs-badge">📖 Swagger API Docs</a>
+            <nav class="site-nav" aria-label="Навигация"><a class="nav-link" href="/static/project-structure.html">Документация ↗</a>
+                <a href="/docs" target="_blank" class="nav-link docs-badge">Swagger API ↗</a>
             </nav>
         </div>
     </header>
 
     <main class="container">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <h1 id="hero-title">Аренда техники<br><span>для компьютерных клубов</span></h1>
+                <p>Игровые ПК, мониторы и периферия для клуба, турнира или временного расширения зала.</p>
+                <a class="btn btn-primary" href="#equipment">К каталогу <span aria-hidden="true">↘</span></a>
+            </div>
+            <img class="hero-photo" src="/static/dev-workstation.jpg" alt="Рабочее место с компьютером и клавиатурой" fetchpriority="high">
+        </section>
+        <section class="card club-showcase" aria-labelledby="showcase-title">
+            <p class="club-label">Для клиента</p>
+            <h2 id="showcase-title">Оборудование для клуба</h2>
+            <ul class="club-categories">
+                <li><span class="club-code" aria-hidden="true">PC</span><h3>Игровые ПК</h3><p>Системные блоки для игровых мест и турниров.</p></li>
+                <li><span class="club-code" aria-hidden="true">Hz</span><h3>Мониторы</h3><p>Экраны для игровых станций и временных площадок.</p></li>
+                <li><span class="club-code" aria-hidden="true">I/O</span><h3>Периферия</h3><p>Клавиатуры, мыши и гарнитуры для комплектации мест.</p></li>
+            </ul>
+            <h3 id="club-stock-title">Сейчас доступно</h3>
+            <p id="club-stock-message" role="status">Загружаем оборудование…</p>
+            <ul class="club-stock" id="club-stock" aria-labelledby="club-stock-title" hidden></ul>
+        </section>
+
+        <section class="card" aria-labelledby="auth-title">
+            <h2 id="auth-title">Личный кабинет</h2>
+            <p id="auth-state" role="status">Войдите, чтобы увидеть свои аренды.</p>
+            <form id="auth-login">
+                <div class="form-grid">
+                    <div class="form-group"><label for="auth-username">Логин</label><input id="auth-username" name="username" autocomplete="username" required></div>
+                    <div class="form-group"><label for="auth-password">Пароль</label><input id="auth-password" name="password" type="password" autocomplete="current-password" required></div>
+                </div>
+                <button class="btn btn-primary">Войти</button>
+            </form>
+            <details><summary>Зарегистрироваться</summary>
+                <form id="auth-register">
+                    <div class="form-grid">
+                        <div class="form-group"><label for="reg-name">ФИО</label><input id="reg-name" name="full_name" required></div>
+                        <div class="form-group"><label for="reg-phone">Телефон</label><input id="reg-phone" name="phone" required></div>
+                        <div class="form-group"><label for="reg-user">Логин</label><input id="reg-user" name="username" minlength="3" autocomplete="username" required></div>
+                        <div class="form-group"><label for="reg-pass">Пароль от 8 символов</label><input id="reg-pass" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
+                    </div>
+                    <button class="btn btn-secondary">Создать аккаунт</button>
+                </form>
+            </details>
+            <button id="auth-logout" class="btn btn-secondary" hidden>Выйти</button>
+        </section>
+        <section class="club-admin" aria-labelledby="admin-title">
+            <header class="club-admin-heading">
+                <p class="club-label" id="account-role">Личный кабинет</p>
+                <h2 id="admin-title">Управление оборудованием</h2>
+            </header>
+            <div class="club-registers" aria-label="Журналы клуба">
+                <details class="card club-register" data-register="rentals" open>
+                    <summary>Аренды и брони</summary>
+                    <div class="form-grid" id="rental-filters">
+                        <div class="form-group"><label for="rental-status">Статус аренды</label>
+                            <select id="rental-status" name="status_filter"><option value="">Все</option><option value="ACTIVE">Активные</option><option value="RESERVED">Брони</option><option value="RETURNED">Возвращённые</option></select>
+                        </div>
+                        <div class="form-group"><label for="rental-from">Период с</label><input type="date" id="rental-from" name="date_from"></div>
+                        <div class="form-group"><label for="rental-to">Период до</label><input type="date" id="rental-to" name="date_to"></div>
+                    </div>
+                    <form id="rental-form" class="rental-form">
+                        <div class="form-grid">
+                            <div class="form-group"><label for="rental-equipment">Оборудование</label>
+                                <select id="rental-equipment" name="equipment_id" required></select>
+                            </div>
+                            <div class="form-group"><label for="rental-client">Клиент</label>
+                                <select id="rental-client" name="client_id" required></select>
+                            </div>
+                            <div class="form-group"><label for="rental-start">Начало</label>
+                                <input id="rental-start" type="date" name="start_date" required>
+                            </div>
+                            <div class="form-group"><label for="rental-end">Окончание</label>
+                                <input id="rental-end" type="date" name="end_date" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit" value="rent" disabled>Оформить аренду</button>
+                        <button class="btn btn-secondary" type="submit" value="book" disabled>Оформить бронь</button>
+                        <p id="rental-message" role="status">Загружаем оборудование и клиентов…</p>
+                    </form>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Аренды и брони">
+                        <thead><tr><th>Оборудование</th><th>Клиент</th><th>Период</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead>
+                        <tbody></tbody>
+                    </table></div>
+                </details>
+                <details class="card club-register" data-admin-only data-register="clients">
+                    <summary>Клиенты</summary>
+                    <form id="client-form">
+                        <input type="hidden" name="client_id">
+                        <div class="form-grid">
+                            <div class="form-group"><label for="client-name">ФИО клиента</label><input id="client-name" name="full_name" maxlength="150" required></div>
+                            <div class="form-group"><label for="client-phone">Телефон</label><input id="client-phone" name="phone" type="tel" placeholder="+7-999-123-45-67" required></div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Добавить клиента</button>
+                        <button class="btn btn-secondary" type="reset">Очистить</button>
+                        <p id="client-form-message" role="status"></p>
+                    </form>
+                    <div class="form-grid" id="client-filters">
+                        <div class="form-group"><label for="client-search">Поиск по ФИО или телефону</label><input id="client-search" name="query" type="search" maxlength="150"></div>
+                        <div class="form-group"><label for="client-sort">Порядок</label><select id="client-sort" name="sort"><option value="id">По ID</option><option value="name">По ФИО</option></select></div>
+                    </div>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Клиенты">
+                        <thead><tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Действия</th></tr></thead><tbody></tbody>
+                    </table></div>
+                </details>
+                <details class="card club-register" data-admin-only data-register="employers">
+                    <summary>Сотрудники</summary>
+                    <p role="status">Загружаем журнал…</p>
+                    <div class="table-responsive" hidden><table class="table" aria-label="Сотрудники">
+                        <thead><tr><th>ФИО</th><th>Роль</th><th>Статус</th></tr></thead><tbody></tbody>
+                    </table></div>
+                </details>
+            </div>
         <!-- Блок добавления оборудования -->
-        <section class="card form-section">
-            <h2>➕ Добавить новый инструмент</h2>
+        <section data-admin-only class="card form-section" id="add-equipment">
+            <h2>Добавить оборудование</h2>
             <form id="add-equipment-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="name">Название инструмента</label>
-                        <input type="text" id="name" placeholder="Напр. Перфоратор Bosch 2-26" required>
+                        <label for="name">Название оборудования</label>
+                        <input type="text" id="name" placeholder="Напр. Монитор 144 Гц" required>
                     </div>
                     <div class="form-group">
                         <label for="inv-number">Инвентарный номер</label>
@@ -38,23 +152,23 @@
                         <input type="number" id="rate" step="0.01" min="1" placeholder="Напр. 750" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" id="btn-submit">Сохранить инструмент</button>
+                <button type="submit" class="btn btn-primary" id="btn-submit">Добавить в каталог</button>
                 <div id="form-message" class="message"></div>
             </form>
         </section>
 
         <!-- Блок со списком оборудования -->
-        <section class="card list-section">
+        <section data-admin-only class="card list-section" id="equipment">
             <div class="section-header">
-                <h2>📋 Оборудование</h2>
-                <label for="equipment-status-filter">Статус</label>
+                <h2>Каталог оборудования</h2>
+                <div class="status-control"><label for="equipment-status-filter">Статус</label>
                 <select id="equipment-status-filter">
                     <option value="">Все</option>
                     <option value="AVAILABLE">Доступен</option>
                     <option value="RENTED">В аренде</option>
                     <option value="REPAIR">В ремонте</option>
-                </select>
-                <button class="btn btn-secondary" id="btn-refresh">🔄 Обновить список</button>
+                </select></div>
+                <button class="btn btn-secondary" id="btn-refresh">Обновить ↻</button>
             </div>
             
             <div class="form-group">
@@ -86,12 +200,18 @@
                 <p>Оборудование не найдено.</p>
             </div>
         </section>
+        </section>
     </main>
 
     <footer class="footer">
         <p>Equipment Rental • Учебный проект команды из 8 разработчиков • FastAPI + SQLite</p>
     </footer>
 
+    <script src="/static/auth-session.js?v=1"></script>
     <script src="/static/app.js?v=equipment-search"></script>
+    <script src="/static/club-showcase.js"></script>
+    <script src="/static/club-registers.js?v=clients"></script>
+    <script src="/static/rental-actions.js?v=auth"></script>
+    <script src="/static/client-actions.js?v=1"></script>
 </body>
 </html>
