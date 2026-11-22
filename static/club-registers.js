@@ -8,7 +8,7 @@
             item.start_date + ' — ' + item.end_date, money.format(item.total_cost),
             labels[item.status] ?? item.status
         ],
-        clients: item => ['#' + item.id, item.full_name],
+        clients: item => ['#' + item.id, item.full_name, item.phone],
         employers: item => [item.full_name, labels[item.role] ?? item.role, item.is_active === 'ACTIVE' ? 'Активен' : labels[item.is_active] ?? item.is_active]
     };
 
@@ -31,6 +31,11 @@
             });
         }
         try {
+            if (key === 'clients') {
+                section.querySelectorAll('#client-filters [name]').forEach(input => {
+                    if (input.value) query.set(input.name, input.value);
+                });
+            }
             const response = await fetch('/' + key + '/?' + query, { signal: request.signal });
             if (!response.ok) throw new Error('Register unavailable');
             const records = await response.json();
@@ -52,6 +57,20 @@
                         cell.textContent = '—';
                     }
                 }
+                if (key === 'clients') {
+                    const cell = row.insertCell();
+                    for (const action of ['edit', 'delete']) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'btn btn-secondary';
+                        button.dataset.clientAction = action;
+                        button.dataset.clientId = record.id;
+                        button.dataset.clientName = record.full_name;
+                        button.dataset.clientPhone = record.phone ?? '';
+                        button.textContent = action === 'edit' ? 'Изменить' : 'Удалить';
+                        cell.append(button, ' ');
+                    }
+                }
                 return row;
             });
             section.querySelector('tbody').replaceChildren(...rows);
@@ -68,6 +87,12 @@
 
     document.querySelectorAll('[data-register]').forEach(section => {
         section.querySelector('#rental-filters')?.addEventListener('change', () => loadRegister(section));
+        section.addEventListener('clients-updated', () => loadRegister(section));
+        let searchTimer;
+        section.querySelector('#client-filters')?.addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => loadRegister(section), 200);
+        });
         section.addEventListener('toggle', () => loadRegister(section));
         section.addEventListener('rental-updated', () => loadRegister(section));
         loadRegister(section);

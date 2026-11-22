@@ -73,6 +73,18 @@
         }
     });
 
+    document.addEventListener('client-options-updated', async () => {
+        const user = await window.rentalSession;
+        if (user?.role !== 'ADMIN') return;
+        const selected = client.value;
+        try {
+            await loadOptions('/clients/', client, item => item.full_name, 'Выберите клиента');
+            if ([...client.options].some(option => option.value === selected)) client.value = selected;
+            buttons.forEach(button => { button.disabled = client.options.length < 2 || equipment.options.length < 2; });
+        } catch (error) {
+            message.textContent = error.message;
+        }
+    });
     window.rentalSession.then(async user => {
         if (!user) {
             message.textContent = 'Войдите для работы с арендой.';

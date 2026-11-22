@@ -107,9 +107,23 @@
                 </details>
                 <details class="card club-register" data-admin-only data-register="clients">
                     <summary>Клиенты</summary>
+                    <form id="client-form">
+                        <input type="hidden" name="client_id">
+                        <div class="form-grid">
+                            <div class="form-group"><label for="client-name">ФИО клиента</label><input id="client-name" name="full_name" maxlength="150" required></div>
+                            <div class="form-group"><label for="client-phone">Телефон</label><input id="client-phone" name="phone" type="tel" placeholder="+7-999-123-45-67" required></div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Добавить клиента</button>
+                        <button class="btn btn-secondary" type="reset">Очистить</button>
+                        <p id="client-form-message" role="status"></p>
+                    </form>
+                    <div class="form-grid" id="client-filters">
+                        <div class="form-group"><label for="client-search">Поиск по ФИО или телефону</label><input id="client-search" name="query" type="search" maxlength="150"></div>
+                        <div class="form-group"><label for="client-sort">Порядок</label><select id="client-sort" name="sort"><option value="id">По ID</option><option value="name">По ФИО</option></select></div>
+                    </div>
                     <p role="status">Загружаем журнал…</p>
                     <div class="table-responsive" hidden><table class="table" aria-label="Клиенты">
-                        <thead><tr><th>ID</th><th>ФИО</th></tr></thead><tbody></tbody>
+                        <thead><tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Действия</th></tr></thead><tbody></tbody>
                     </table></div>
                 </details>
                 <details class="card club-register" data-admin-only data-register="employers">
@@ -196,7 +210,8 @@
     <script src="/static/auth-session.js?v=1"></script>
     <script src="/static/app.js?v=equipment-search"></script>
     <script src="/static/club-showcase.js"></script>
-    <script src="/static/club-registers.js?v=auth"></script>
+    <script src="/static/club-registers.js?v=clients"></script>
     <script src="/static/rental-actions.js?v=auth"></script>
+    <script src="/static/client-actions.js?v=1"></script>
 </body>
 </html>
