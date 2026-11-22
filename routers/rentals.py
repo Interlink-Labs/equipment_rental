@@ -9,6 +9,7 @@ from datetime import date
 from sqlalchemy import text
 
 from database import get_db
+from auth import User, get_current_user, require_admin
 import models
 import schemas
 import services
@@ -28,11 +29,14 @@ def get_all_rentals(
     date_from: Optional[date] = None,
     date_to: Optional[date] = None,
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
     """Получить список всех аренд."""
     if date_from and date_to and date_from > date_to:
         raise HTTPException(422, "Начало периода не может быть позже окончания")
     query = db.query(models.Rental)
+    if user.role != "ADMIN":
+        query = query.filter(models.Rental.client_id == user.client_id)
     if status_filter:
         query = query.filter(models.Rental.status == status_filter)
     if date_from:
@@ -43,7 +47,7 @@ def get_all_rentals(
 
 
 @router.post("/", response_model=schemas.RentalResponse, status_code=status.HTTP_201_CREATED)
-def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_db)):
+def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     """
     Оформить аренду инструмента.
     Логика:
@@ -103,7 +107,7 @@ def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_d
 # =======================================================================
 
 @router.post("/book", response_model=schemas.RentalResponse, status_code=status.HTTP_201_CREATED)
-def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get_db)):
+def create_booking(booking_data: schemas.RentalBooking, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     """
     Оформить бронь инструмента на будущие даты.
     Отличие от аренды: инструмент не выдаётся сразу, статус инструмента
@@ -117,6 +121,10 @@ def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get
     5. Рассчитать стоимость.
     6. Создать запись брони со статусом 'RESERVED'.
     """
+    if user.role != "ADMIN":
+        booking_data.client_id = user.client_id
+    elif booking_data.client_id is None:
+        raise HTTPException(422, "Выберите клиента для брони")
     lock_rental_write(db)
     # 1. Проверяем инструмент
     tool = db.query(models.Equipment).filter(models.Equipment.id == booking_data.equipment_id).first()
@@ -175,7 +183,7 @@ def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get
 # =======================================================================
 
 @router.post("/{rental_id}/return", response_model=schemas.RentalResponse)
-def return_equipment(rental_id: int, db: Session = Depends(get_db)):
+def return_equipment(rental_id: int, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     """Закрыть активную аренду и обновить статус оборудования."""
     lock_rental_write(db)
     updated = db.query(models.Rental).filter_by(id=rental_id, status="ACTIVE").update(
@@ -199,7 +207,7 @@ def return_equipment(rental_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{rental_id}/issue", response_model=schemas.RentalResponse)
-def issue_booking(rental_id: int, db: Session = Depends(get_db)):
+def issue_booking(rental_id: int, db: Session = Depends(get_db), user: User = Depends(require_admin)):
     """Выдать оборудование по существующей брони."""
     lock_rental_write(db)
     rental = db.get(models.Rental, rental_id)
@@ -223,4 +231,11 @@ def issue_booking(rental_id: int, db: Session = Depends(get_db)):
     rental.equipment.status = "RENTED"
     db.commit()
     db.refresh(rental)
+    return rental
+
+@router.get("/{rental_id}", response_model=schemas.RentalResponse)
+def get_rental(rental_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    rental = db.get(models.Rental, rental_id)
+    if rental is None or (user.role != "ADMIN" and rental.client_id != user.client_id):
+        raise HTTPException(404, "Аренда не найдена")
     return rental

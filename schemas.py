@@ -98,3 +98,8 @@ class RentalResponse(RentalCreate):
     status: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Аренды: клиент обычного пользователя определяется из JWT.
+class RentalBooking(RentalCreate):
+    client_id: Optional[int] = None

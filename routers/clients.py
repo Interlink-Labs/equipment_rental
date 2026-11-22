@@ -7,10 +7,11 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_db
+from auth import require_admin
 import models
 import schemas
 
-router = APIRouter(prefix="/clients", tags=["Клиенты"])
+router = APIRouter(prefix="/clients", tags=["Клиенты"], dependencies=[Depends(require_admin)])
 
 
 # =======================================================================

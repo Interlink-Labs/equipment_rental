@@ -9,6 +9,7 @@ from math import isfinite
 from typing import List, Optional
 
 from database import get_db
+from auth import require_admin
 import models
 import schemas
 
@@ -42,7 +43,7 @@ def get_equipment_by_id(equipment_id: int, db: Session = Depends(get_db)):
     return tool
 
 
-@router.post("/", response_model=schemas.EquipmentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.EquipmentResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_admin)])
 def create_equipment(item: schemas.EquipmentCreate, db: Session = Depends(get_db)):
     """
     Добавить новый инструмент в базу.
@@ -71,7 +72,7 @@ def create_equipment(item: schemas.EquipmentCreate, db: Session = Depends(get_db
     return new_tool
 
 
-@router.put("/{equipment_id}", response_model=schemas.EquipmentResponse)
+@router.put("/{equipment_id}", response_model=schemas.EquipmentResponse, dependencies=[Depends(require_admin)])
 def update_equipment(
     equipment_id: int, update_data: schemas.EquipmentUpdate, db: Session = Depends(get_db)
 ):
@@ -100,7 +101,7 @@ def update_equipment(
     return tool
 
 
-@router.delete("/{equipment_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{equipment_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 def delete_equipment(equipment_id: int, db: Session = Depends(get_db)):
     """Удалить инструмент, если с ним не связаны записи об аренде."""
     tool = get_equipment_by_id(equipment_id, db)
