@@ -4,8 +4,9 @@ routers/rentals.py — Эндпоинты для оформления, возв�
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Literal, Optional
 from datetime import date
+from sqlalchemy import text
 
 from database import get_db
 import models
@@ -15,10 +16,30 @@ import services
 router = APIRouter(prefix="/rentals", tags=["Аренды"])
 
 
+
+def lock_rental_write(db: Session):
+    """Сериализовать проверки и запись аренды в SQLite."""
+    if db.get_bind().dialect.name == "sqlite":
+        db.execute(text("BEGIN IMMEDIATE"))
+
 @router.get("/", response_model=List[schemas.RentalResponse])
-def get_all_rentals(db: Session = Depends(get_db)):
+def get_all_rentals(
+    status_filter: Optional[Literal["ACTIVE", "RESERVED", "RETURNED"]] = None,
+    date_from: Optional[date] = None,
+    date_to: Optional[date] = None,
+    db: Session = Depends(get_db),
+):
     """Получить список всех аренд."""
-    return db.query(models.Rental).all()
+    if date_from and date_to and date_from > date_to:
+        raise HTTPException(422, "Начало периода не может быть позже окончания")
+    query = db.query(models.Rental)
+    if status_filter:
+        query = query.filter(models.Rental.status == status_filter)
+    if date_from:
+        query = query.filter(models.Rental.end_date >= date_from)
+    if date_to:
+        query = query.filter(models.Rental.start_date <= date_to)
+    return query.order_by(models.Rental.id.desc()).all()
 
 
 @router.post("/", response_model=schemas.RentalResponse, status_code=status.HTTP_201_CREATED)
@@ -32,10 +53,14 @@ def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_d
     4. Рассчитать стоимость аренды (функция из services.py).
     5. Создать запись аренды и обновить статус инструмента на 'RENTED'.
     """
+    lock_rental_write(db)
     # 1. Проверяем инструмент
     tool = db.query(models.Equipment).filter(models.Equipment.id == rental_data.equipment_id).first()
     if not tool:
         raise HTTPException(status_code=404, detail="Инструмент не найден")
+
+    if tool.status == "REPAIR":
+        raise HTTPException(409, "Оборудование находится в ремонте")
 
     # 2. Проверяем клиента
     client = db.query(models.Client).filter(models.Client.id == rental_data.client_id).first()
@@ -49,6 +74,9 @@ def create_rental(rental_data: schemas.RentalCreate, db: Session = Depends(get_d
     # 4. Проверяем доступность через services.py
     if not services.is_equipment_available_for_dates(db, tool.id, rental_data.start_date, rental_data.end_date):
         raise HTTPException(status_code=400, detail="Инструмент уже занят на эти даты!")
+
+    if tool.status == "RENTED":
+        raise HTTPException(409, "Оборудование ещё не возвращено")
 
     # 5. Расчет стоимости
     price = services.calculate_rental_price(tool.daily_rate, rental_data.start_date, rental_data.end_date)
@@ -89,10 +117,14 @@ def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get
     5. Рассчитать стоимость.
     6. Создать запись брони со статусом 'RESERVED'.
     """
+    lock_rental_write(db)
     # 1. Проверяем инструмент
     tool = db.query(models.Equipment).filter(models.Equipment.id == booking_data.equipment_id).first()
     if not tool:
         raise HTTPException(status_code=404, detail="Инструмент не найден")
+
+    if tool.status == "REPAIR":
+        raise HTTPException(409, "Оборудование находится в ремонте")
 
     # 2. Проверяем клиента
     client = db.query(models.Client).filter(models.Client.id == booking_data.client_id).first()
@@ -145,6 +177,7 @@ def create_booking(booking_data: schemas.RentalCreate, db: Session = Depends(get
 @router.post("/{rental_id}/return", response_model=schemas.RentalResponse)
 def return_equipment(rental_id: int, db: Session = Depends(get_db)):
     """Закрыть активную аренду и обновить статус оборудования."""
+    lock_rental_write(db)
     updated = db.query(models.Rental).filter_by(id=rental_id, status="ACTIVE").update(
         {"status": "RETURNED"}
     )
@@ -162,4 +195,32 @@ def return_equipment(rental_id: int, db: Session = Depends(get_db)):
             rental.equipment.status = "AVAILABLE"
         db.commit()
         db.refresh(rental)
+    return rental
+
+
+@router.post("/{rental_id}/issue", response_model=schemas.RentalResponse)
+def issue_booking(rental_id: int, db: Session = Depends(get_db)):
+    """Выдать оборудование по существующей брони."""
+    lock_rental_write(db)
+    rental = db.get(models.Rental, rental_id)
+    if rental is None:
+        raise HTTPException(404, "Аренда не найдена")
+    if rental.status == "ACTIVE":
+        return rental
+    if rental.status != "RESERVED":
+        raise HTTPException(409, "Выдать можно только забронированное оборудование")
+    if not rental.start_date <= date.today() <= rental.end_date:
+        raise HTTPException(409, "Выдача возможна только в период брони")
+    if rental.equipment.status != "AVAILABLE":
+        raise HTTPException(409, "Оборудование недоступно для выдачи")
+    if db.query(models.Rental).filter(
+        models.Rental.equipment_id == rental.equipment_id,
+        models.Rental.id != rental.id,
+        models.Rental.status == "ACTIVE",
+    ).first():
+        raise HTTPException(409, "Оборудование ещё не возвращено")
+    rental.status = "ACTIVE"
+    rental.equipment.status = "RENTED"
+    db.commit()
+    db.refresh(rental)
     return rental
