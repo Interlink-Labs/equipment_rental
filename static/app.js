@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusFilter = document.getElementById('equipment-status-filter');
     const searchInput = document.getElementById('equipment-search');
     const actionMessage = document.getElementById('equipment-action-message');
+    const sortSelect = document.getElementById('equipment-sort');
+    const submitButton = document.getElementById('btn-submit');
+    const cancelEdit = document.getElementById('equipment-cancel');
+    let editingId = null;
     let equipmentRequest;
     let searchTimer;
 
@@ -29,19 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (statusFilter.value) {
                 query.set('status_filter', statusFilter.value);
             }
+            query.set('query', searchInput.value.trim());
+            query.set('sort', sortSelect.value);
             const response = await fetch(`/equipment/?${query}`, { signal: request.signal });
             if (!response.ok) {
                 throw new Error(`Ошибка загрузки: ${response.status}`);
             }
             const items = await response.json();
             if (request.signal.aborted) return;
-            const search = searchInput.value.trim().toLocaleLowerCase('ru');
-            const data = items.filter(item =>
-                item.name.toLocaleLowerCase('ru').includes(search) ||
-                item.inventory_number.toLocaleLowerCase('ru').includes(search)
-            );
+            const data = items;
 
             loadingEl.style.display = 'none';
+            equipmentList.replaceChildren();
 
             if (data.length === 0) {
                 emptyStateEl.style.display = 'block';
@@ -49,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             equipmentTable.style.display = 'table';
-            equipmentList.innerHTML = '';
 
             data.forEach(item => {
                 const tr = document.createElement('tr');
@@ -74,6 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><span class="badge ${badgeClass}">${statusText}</span></td>
                 `;
                 const actions = tr.insertCell();
+                const edit = document.createElement('button');
+                edit.type = 'button';
+                edit.className = 'btn btn-secondary';
+                edit.textContent = 'Изменить';
+                edit.addEventListener('click', () => {
+                    editingId = item.id;
+                    document.getElementById('name').value = item.name;
+                    document.getElementById('inv-number').value = item.inventory_number;
+                    document.getElementById('inv-number').disabled = true;
+                    document.getElementById('rate').value = item.daily_rate;
+                    submitButton.textContent = 'Сохранить изменения';
+                    addForm.closest('section').querySelector('h2').textContent = 'Редактировать оборудование';
+                    cancelEdit.hidden = false;
+                    document.getElementById('name').focus();
+                });
                 const changeStatus = document.createElement('button');
                 changeStatus.type = 'button';
                 changeStatus.className = 'btn btn-secondary';
@@ -93,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateEquipment(item.id, 'DELETE', undefined, actions);
                     }
                 });
-                actions.append(changeStatus, ' ', remove);
+                actions.append(edit, ' ', changeStatus, ' ', remove);
                 equipmentList.appendChild(tr);
             });
         } catch (error) {
@@ -117,7 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json().catch(() => ({}));
                 throw new Error(typeof result.detail === 'string' ? result.detail : `Ошибка ${response.status}`);
             }
-            showMessage(actionMessage, method === 'DELETE' ? 'Инструмент удалён' : 'Статус обновлён', 'success');
+            if (method === 'DELETE' && editingId === id) addForm.reset();
+            showMessage(actionMessage, method === 'DELETE' ? 'Оборудование удалено' : 'Статус обновлён', 'success');
             await loadEquipment();
         } catch (error) {
             showMessage(actionMessage, error.message, 'error');
@@ -129,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обработка отправки формы добавления (POST /equipment/)
     addForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (submitButton.disabled) return;
 
         const nameInput = document.getElementById('name');
         const invInput = document.getElementById('inv-number');
@@ -140,9 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
             daily_rate: parseFloat(rateInput.value)
         };
 
+        const updating = editingId !== null;
+        if (updating) delete payload.inventory_number;
+        submitButton.disabled = true;
         try {
-            const response = await fetch('/equipment/', {
-                method: 'POST',
+            const response = await fetch(updating ? '/equipment/' + editingId : '/equipment/', {
+                method: updating ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -153,15 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 // Если сервер вернул ошибку (например, 400 при дубликате)
-                throw new Error(result.detail || 'Ошибка сохранения');
+                throw new Error(typeof result.detail === 'string' ? result.detail : result.detail?.map(item => item.msg).join('. ') || 'Ошибка сохранения');
             }
 
             // Успех! Очищаем форму и показываем сообщение
-            showMessage(formMessage, `✅ Инструмент "${result.name}" успешно добавлен!`, 'success');
+            showMessage(formMessage, updating ? 'Изменения сохранены.' : 'Оборудование добавлено.', 'success');
             addForm.reset();
             loadEquipment(); // Перезагружаем список
         } catch (error) {
             showMessage(formMessage, `❌ Ошибка: ${error.message}`, 'error');
+        } finally {
+            submitButton.disabled = false;
         }
     });
 
@@ -169,6 +193,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRefresh.addEventListener('click', () => {
         loadEquipment();
     });
+    addForm.addEventListener('reset', () => {
+        editingId = null;
+        document.getElementById('inv-number').disabled = false;
+        submitButton.textContent = 'Добавить в каталог';
+        addForm.closest('section').querySelector('h2').textContent = 'Добавить оборудование';
+        cancelEdit.hidden = true;
+    });
+    sortSelect.addEventListener('change', loadEquipment);
     statusFilter.addEventListener('change', loadEquipment);
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimer);

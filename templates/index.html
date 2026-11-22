@@ -153,6 +153,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" id="btn-submit">Добавить в каталог</button>
+                <button type="reset" class="btn btn-secondary" id="equipment-cancel" hidden>Отменить редактирование</button>
                 <div id="form-message" class="message"></div>
             </form>
         </section>
@@ -174,6 +175,15 @@
             <div class="form-group">
                 <label for="equipment-search">Поиск оборудования</label>
                 <input type="search" id="equipment-search" placeholder="Название или инвентарный номер">
+            </div>
+            <div class="form-group">
+                <label for="equipment-sort">Сортировка оборудования</label>
+                <select id="equipment-sort">
+                    <option value="id">По ID</option>
+                    <option value="name">По названию</option>
+                    <option value="price_asc">Сначала дешевле</option>
+                    <option value="price_desc">Сначала дороже</option>
+                </select>
             </div>
             <div id="loading" class="loading">Загрузка данных...</div>
 
@@ -208,7 +218,7 @@
     </footer>
 
     <script src="/static/auth-session.js?v=1"></script>
-    <script src="/static/app.js?v=equipment-search"></script>
+    <script src="/static/app.js?v=equipment-complete"></script>
     <script src="/static/club-showcase.js"></script>
     <script src="/static/club-registers.js?v=clients"></script>
     <script src="/static/rental-actions.js?v=auth"></script>
