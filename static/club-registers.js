@@ -12,27 +12,39 @@
         employers: item => [item.full_name, labels[item.role] ?? item.role, item.is_active === 'ACTIVE' ? 'Активен' : labels[item.is_active] ?? item.is_active]
     };
 
+    const requests = new WeakMap();
     async function loadRegister(section) {
         if (!section.open) return;
         const key = section.dataset.register;
-        const message = section.querySelector('[role="status"]');
+        const message = section.querySelector(':scope > p[role="status"]');
         const table = section.querySelector('.table-responsive');
 
+        requests.get(section)?.abort();
+        const request = new AbortController();
+        requests.set(section, request);
+        const query = new URLSearchParams();
+        if (key === 'rentals') {
+            section.querySelectorAll('#rental-filters [name]').forEach(input => {
+                if (input.value) query.set(input.name, input.value);
+            });
+        }
         try {
-            const response = await fetch('/' + key + '/');
+            const response = await fetch('/' + key + '/?' + query, { signal: request.signal });
             if (!response.ok) throw new Error('Register unavailable');
             const records = await response.json();
+            if (request.signal.aborted) return;
             const rows = records.map(record => {
                 const row = document.createElement('tr');
                 columns[key](record).forEach(value => { row.insertCell().textContent = value ?? '—'; });
                 if (key === 'rentals') {
                     const cell = row.insertCell();
-                    if (record.status === 'ACTIVE') {
+                    if (record.status === 'ACTIVE' || record.status === 'RESERVED') {
                         const button = document.createElement('button');
                         button.type = 'button';
                         button.className = 'btn btn-secondary';
-                        button.dataset.returnRental = record.id;
-                        button.textContent = 'Вернуть';
+                        button.dataset.rentalId = record.id;
+                        button.dataset.rentalAction = record.status === 'ACTIVE' ? 'return' : 'issue';
+                        button.textContent = record.status === 'ACTIVE' ? 'Вернуть' : 'Выдать';
                         cell.append(button);
                     } else {
                         cell.textContent = '—';
@@ -45,6 +57,7 @@
             message.textContent = 'В журнале пока нет записей.';
             message.hidden = rows.length > 0;
         } catch {
+            if (request.signal.aborted) return;
             table.hidden = true;
             message.hidden = false;
             message.textContent = 'Не удалось загрузить журнал.';
@@ -52,6 +65,7 @@
     }
 
     document.querySelectorAll('[data-register]').forEach(section => {
+        section.querySelector('#rental-filters')?.addEventListener('change', () => loadRegister(section));
         section.addEventListener('toggle', () => loadRegister(section));
         section.addEventListener('rental-updated', () => loadRegister(section));
         loadRegister(section);

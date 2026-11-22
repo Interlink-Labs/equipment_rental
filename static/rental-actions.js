@@ -35,12 +35,12 @@
     }
 
     section.addEventListener('click', async event => {
-        const button = event.target.closest('button[data-return-rental]');
-        if (!button || button.disabled || !window.confirm('Отметить оборудование как возвращённое?')) return;
+        const button = event.target.closest('button[data-rental-action]');
+        if (!button || button.disabled || !window.confirm(button.dataset.rentalAction === 'return' ? 'Отметить оборудование как возвращённое?' : 'Выдать оборудование по брони?')) return;
         button.disabled = true;
         try {
-            await sendRental('/rentals/' + button.dataset.returnRental + '/return');
-            message.textContent = 'Оборудование возвращено.';
+            await sendRental('/rentals/' + button.dataset.rentalId + '/' + button.dataset.rentalAction);
+            message.textContent = button.dataset.rentalAction === 'return' ? 'Оборудование возвращено.' : 'Оборудование выдано.';
             refreshRentalViews();
         } catch (error) {
             message.textContent = error.message;

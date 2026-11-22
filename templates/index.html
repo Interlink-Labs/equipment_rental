@@ -49,6 +49,13 @@
             <div class="club-registers" aria-label="Журналы клуба">
                 <details class="card club-register" data-register="rentals" open>
                     <summary>Аренды и брони</summary>
+                    <div class="form-grid" id="rental-filters">
+                        <div class="form-group"><label for="rental-status">Статус аренды</label>
+                            <select id="rental-status" name="status_filter"><option value="">Все</option><option value="ACTIVE">Активные</option><option value="RESERVED">Брони</option><option value="RETURNED">Возвращённые</option></select>
+                        </div>
+                        <div class="form-group"><label for="rental-from">Период с</label><input type="date" id="rental-from" name="date_from"></div>
+                        <div class="form-group"><label for="rental-to">Период до</label><input type="date" id="rental-to" name="date_to"></div>
+                    </div>
                     <form id="rental-form" class="rental-form">
                         <div class="form-grid">
                             <div class="form-group"><label for="rental-equipment">Оборудование</label>
@@ -164,7 +171,7 @@
 
     <script src="/static/app.js?v=equipment-search"></script>
     <script src="/static/club-showcase.js"></script>
-    <script src="/static/club-registers.js?v=rental-actions"></script>
-    <script src="/static/rental-actions.js?v=1"></script>
+    <script src="/static/club-registers.js?v=rental-stage4"></script>
+    <script src="/static/rental-actions.js?v=stage4"></script>
 </body>
 </html>
