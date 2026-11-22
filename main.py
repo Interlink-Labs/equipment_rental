@@ -1,156 +1,64 @@
-# Запуск                   python -m uvicorn main:app --reload
-# http://127.0.0.1:8000/
-# http://127.0.0.1:8000/docs - документация
+"""
+main.py — Главная точка входа в приложение Equipment Rental.
+Запускает веб-сервер, подключает базу данных и объединяет все маршруты (роутеры).
+"""
+import os
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-from fastapi import Depends, FastAPI, HTTPException, status
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from database import engine, Base
+from routers import equipment, clients, rentals, employers, auth
 
-from database import Base, SessionLocal, engine
-from models import Client
-from schemas import ClientCreate, ClientResponse, ClientUpdate
-
+# Автоматически создаем таблицы в файле базы данных SQLite при старте приложения, если их еще нет
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="API управления клиентами")
-API_PREFIX = "/api/v1"
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-def get_client_or_404(client_id: int, db: Session) -> Client:
-    client = db.query(Client).filter(Client.id == client_id).first()
-    if client is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Клиент не найден",
-        )
-    return client
-
-
-@app.get("/")
-def home():
-    return {"message": "API работает", "clients": f"{API_PREFIX}/clients"}
-
-
-@app.post(
-    f"{API_PREFIX}/clients",
-    response_model=ClientResponse,
-    status_code=status.HTTP_201_CREATED,
+# Инициализируем приложение FastAPI
+app = FastAPI(
+    title="Equipment Rental API 🛠️",
+    description="Учебная система учета аренды оборудования и инструментов",
+    version="1.0.0"
 )
-def create_client(data: ClientCreate, db: Session = Depends(get_db)):
-    if db.query(Client).filter(Client.phone == data.phone).first():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Клиент с таким телефоном уже существует",
-        )
 
-    if data.email and db.query(Client).filter(Client.email == data.email).first():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Клиент с таким email уже существует",
-        )
+# Подключаем роутеры по направлениям
+app.include_router(auth.router)
+app.include_router(equipment.router)
+app.include_router(clients.router)
+app.include_router(rentals.router)
+app.include_router(employers.router)
 
-    client = Client(**data.model_dump())
-    db.add(client)
-
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Клиент с таким телефоном или email уже существует",
-        )
-
-    db.refresh(client)
-    return client
+# Подключаем папку со статическими файлами (стили CSS и скрипты JS)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
-@app.get(f"{API_PREFIX}/clients", response_model=list[ClientResponse])
-def get_clients(db: Session = Depends(get_db)):
-    return db.query(Client).order_by(Client.id).all()
+# Главная страница сайта
+@app.get("/", tags=["Главная"])
+def read_root():
+    """
+    Отдает HTML-страницу index.html для браузера.
+    Если файла нет — отдает приветственное сообщение со ссылкой на Swagger.
+    """
+    template_path = os.path.join(os.path.dirname(__file__), "templates", "index.html")
+    if os.path.exists(template_path):
+        return FileResponse(template_path)
+    return {
+        "message": "Сервер Equipment Rental работает!",
+        "docs": "Откройте http://127.0.0.1:8000/docs для интерактивного тестирования API"
+    }
 
 
-@app.get(
-    f"{API_PREFIX}/clients/{{client_id}}",
-    response_model=ClientResponse,
-)
-def get_client(client_id: int, db: Session = Depends(get_db)):
-    return get_client_or_404(client_id, db)
+# Позволяет запускать сервер кнопкой "Play" (Run) в VS Code или командой "python main.py"
+if __name__ == "__main__":
+    import uvicorn
+    from bootstrap_admin import create_initial_admin
+    credentials = create_initial_admin()
+    if credentials:
+        print("\nПервый администратор создан. Сохраните данные для входа.")
+        print(f"Логин: {credentials[0]}")
+        print(f"Пароль: {credentials[1]}\n")
+    print("\n🚀 Сервер запускается на http://127.0.0.1:8000")
+    print("📖 Документация Swagger доступна на http://127.0.0.1:8000/docs\n")
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
-
-@app.put(
-    f"{API_PREFIX}/clients/{{client_id}}",
-    response_model=ClientResponse,
-)
-def update_client(
-    client_id: int,
-    data: ClientUpdate,
-    db: Session = Depends(get_db),
-):
-    client = get_client_or_404(client_id, db)
-    changes = data.model_dump(exclude_unset=True)
-
-    if "phone" in changes and changes["phone"] is not None:
-        duplicate = (
-            db.query(Client)
-            .filter(Client.phone == changes["phone"], Client.id != client_id)
-            .first()
-        )
-        if duplicate:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Клиент с таким телефоном уже существует",
-            )
-
-    if "email" in changes and changes["email"] is not None:
-        duplicate = (
-            db.query(Client)
-            .filter(Client.email == changes["email"], Client.id != client_id)
-            .first()
-        )
-        if duplicate:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Клиент с таким email уже существует",
-            )
-
-    for field, value in changes.items():
-        setattr(client, field, value)
-
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Клиент с таким телефоном или email уже существует",
-        )
-
-    db.refresh(client)
-    return client
-
-
-@app.delete(f"{API_PREFIX}/clients/{{client_id}}")
-def delete_client(client_id: int, db: Session = Depends(get_db)):
-    client = get_client_or_404(client_id, db)
-
-    db.delete(client)
-
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Невозможно удалить клиента: с ним связаны другие записи",
-        )
-
-    return {"message": "Клиент удалён"}

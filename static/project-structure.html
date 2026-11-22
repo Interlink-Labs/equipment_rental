@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Документация · Equipment Rental</title>
+<link rel="icon" href="./equipment-rental-logo.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;--red:#ff3857;--ink:#0d0d10;--paper:#f7f4f4;--muted:#d2c6cc;font-family:"Segoe UI",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(147deg,transparent 52%,#2d141e 52%,#2d141e 67%,transparent 67%),#0d0d10;min-height:100vh}
+main{max-width:1200px;margin:auto;padding:24px clamp(18px,5vw,64px) 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid #423740;padding-bottom:16px}
+.brand{font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.brand span{color:var(--red)}
+a{color:#ff9faf;text-underline-offset:4px}
+:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+h1{font-size:clamp(2.25rem,7vw,5.6rem);font-style:italic;line-height:.95;letter-spacing:-.06em;text-transform:uppercase;margin:36px 0 26px;overflow-wrap:anywhere}
+details{margin:11px 0}
+summary{list-style:none;cursor:pointer;width:fit-content;max-width:100%;padding:8px 30px 9px 18px;border-left:5px solid var(--red);background:#202026;font-weight:900;font-style:italic;text-transform:uppercase;font-size:var(--menu-font);line-height:1.5;clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"▸";margin-right:10px;color:var(--red)}
+summary:hover,details[open]>summary{background:var(--paper);color:#151015}
+details[open]>summary:before{content:"▾";color:#b50030}
+summary:focus-visible{outline-offset:-4px}
+.panel{position:relative;margin:8px 0 18px;padding:clamp(16px,3vw,32px);background:linear-gradient(150deg,#23171f,#17171c 65%);border:1px solid #59404e;border-left:4px solid var(--red);overflow-wrap:anywhere}
+.panel:before{content:"";position:absolute;top:0;right:0;width:76px;height:20px;background:var(--red);clip-path:polygon(35% 0,100% 0,100% 100%,0 100%);pointer-events:none}
+.panel h2{font-size:clamp(1.4rem,4vw,2.45rem);font-weight:900;font-style:italic;margin:0 0 16px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+article{padding:14px;background:#231e25;border-left:2px solid #95435a}
+article h2,article h3{font-size:1.05rem;margin:0 0 8px}
+p{line-height:1.5;color:var(--muted)}
+article p{margin:0 0 8px}
+ul{padding-left:18px}
+pre{padding:12px;background:#101014;border-left:2px solid #99435b;overflow:auto}
+dt{font-weight:700;margin-top:12px}dd{margin:4px 0 0}dd code{overflow-wrap:anywhere}
+@media(max-width:650px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: no-preference) {
+  h1 { animation: title-cut 310ms cubic-bezier(.12,.8,.25,1) both; }
+  details > summary { animation: menu-cut 300ms cubic-bezier(.12,.8,.25,1) both; }
+  details:nth-of-type(1):not([open]) > summary { animation-delay: 45ms; }
+  details:nth-of-type(2):not([open]) > summary { animation-delay: 90ms; }
+  details:nth-of-type(3):not([open]) > summary { animation-delay: 135ms; }
+  summary { transition: translate 140ms ease; }
+
+  details[open] > summary { animation: select-flash 260ms ease-out both; }
+  details[open] > .panel { animation: panel-cut 330ms cubic-bezier(.12,.8,.25,1) both; }
+}
+@keyframes title-cut {
+  from { opacity: 0; transform: translateX(-18px) skewX(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes menu-cut {
+  from { opacity: 0; transform: translate(-22px, 7px) skewX(-10deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes select-flash {
+  0% { background: #b50030; color: white; }
+  100% { background: var(--paper); color: #151015; transform: none; }
+}
+@keyframes panel-cut {
+  from { opacity: 0; transform: translateY(10px); clip-path: polygon(0 0, 28% 0, 0 100%, 0 100%); }
+  to { opacity: 1; transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+.docs-layout{--menu-font:clamp(1.14rem,4vw,2.4rem);--menu-width:calc(62% - 24px);display:grid;grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);gap:24px;align-items:start}
+.docs-menu{min-width:0}
+.joker{position:relative;align-self:start;margin:0;isolation:isolate}
+.joker::before{content:"";position:absolute;inset:12% 0 7%;background:linear-gradient(135deg,#8c0b25,var(--red));clip-path:polygon(23% 5%,100% 0,77% 100%,0 86%);z-index:-1}
+.joker img{display:block;width:100%;height:auto;filter:drop-shadow(9px 11px 0 var(--page-bg))}
+@media(max-width:720px){.docs-layout{grid-template-columns:1fr}.joker{width:min(70%,280px);margin-inline:auto}}
+/* Dark Hour follows the open menu section, including keyboard activation. */
+body{--page-bg:#0d0d10;position:relative;isolation:isolate;background:var(--page-bg)}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;background:linear-gradient(147deg,transparent 52%,#2d141e 52%,#2d141e 67%,transparent 67%);transform:translateY(var(--stripe-shift,0px)) rotate(var(--stripe-angle,0deg));transform-origin:50% 50%}
+body:has(.docs-menu details[open]){background:#050407}
+body:has(.docs-menu details[open])::before{opacity:.65}
+body:has(.docs-menu details:nth-of-type(1)[open]){--stripe-shift:-9vh;--stripe-angle:15deg}
+body:has(.docs-menu details:nth-of-type(2)[open]){--stripe-shift:-17vh;--stripe-angle:-13deg}
+body:has(.docs-menu details:nth-of-type(3)[open]){--stripe-shift:-25vh;--stripe-angle:22deg}
+@media(prefers-reduced-motion:no-preference){
+  body{transition:background-color 420ms ease}
+  body::before{transition:transform 740ms cubic-bezier(.2,.9,.25,1.16),opacity 420ms ease}
+  body:has(.docs-menu details[open])::before{animation:dark-hour-sway 5s 740ms ease-in-out infinite}
+}
+@keyframes dark-hour-sway{
+  0%,100%{rotate:0deg}
+  50%{rotate:-5deg}
+}
+.docs-layout:has(.docs-menu details[open]) .joker{display:none}
+.docs-layout:has(.docs-menu details[open]){grid-template-columns:minmax(0,1fr)}
+@media(min-width:721px) and (max-width:1099px){ .docs-menu:has(details[open]) summary{max-width:var(--menu-width)} }
+@media(min-width:1100px){
+  .docs-layout:has(details[open]){--menu-row:calc(1.5 * var(--menu-font) + 28px)}
+  .docs-menu:has(details[open]){position:relative;min-height:calc(3 * var(--menu-row))}
+  .docs-menu:has(details[open]) details{margin:0}
+  .docs-menu:has(details[open]) summary{position:absolute;left:0;top:calc(11px + var(--menu-index) * var(--menu-row));max-width:var(--menu-width)}
+  .docs-menu details:nth-of-type(1){--menu-index:0}
+  .docs-menu details:nth-of-type(2){--menu-index:1}
+  .docs-menu details:nth-of-type(3){--menu-index:2}
+  .docs-menu details[open]>.panel{margin:0 calc(-1 * clamp(0px, (100vw - 1200px) / 2 + 32px, 320px)) 0 calc(var(--menu-width) + 24px)}
+}
+@media(prefers-reduced-motion:no-preference){
+  .docs-layout:not(:has(details[open])) .joker{animation:menu-cut 300ms ease-out both}
+}
+.quick-links{display:flex;flex-wrap:wrap;gap:8px;align-self:center}
+.quick-links a{display:block;padding:8px 14px;background:#22151d;border-left:3px solid var(--red);color:var(--paper);font-weight:800;font-style:italic;text-decoration:none;text-transform:uppercase}
+.quick-links a:hover,.quick-links a:focus-visible{background:var(--paper);color:#151015}
+.docs-layout:has(details[open]) .quick-links{grid-area:2/1;display:flex}
+.docs-layout{--card-height:82px;--menu-font:clamp(1rem,2.5vw,1.85rem)}
+.docs-menu summary{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:1fr auto;align-items:center;gap:0 8px;width:100%;min-height:var(--card-height);padding:5px 17px 6px 8px;line-height:1.08;background:#2f1320;color:#fff;clip-path:polygon(0 0,96% 0,100% 100%,3% 100%);border-left:0;box-shadow:inset 0 3px #a91b3d}
+.docs-menu summary::before{display:none}
+.docs-menu summary:hover,.docs-menu details[open]>summary{background:#f7f4f4;color:#110c10;box-shadow:inset 0 4px #ee234c}
+.menu-number{grid-row:1 / 3;justify-self:center;align-self:center;position:relative;isolation:isolate;display:grid;place-items:center;width:43px;height:50px;rotate:15deg;background:#f7f4f4;color:#fff;font:700 1.36rem/1 Georgia,serif;clip-path:polygon(0 0,100% 2%,98% 83%,74% 100%,44% 88%,5% 96%)}
+.menu-number::before{content:"";position:absolute;inset:3px;z-index:-1;background:#100e11;clip-path:polygon(0 0,100% 2%,98% 83%,74% 100%,44% 88%,5% 96%)}
+.menu-caption{grid-column:2;display:block;padding:3px 5px;background:#9d1236;color:#fff;font-size:.72rem;letter-spacing:.06em;text-align:center;font-style:normal}
+details[open] .menu-caption,summary:hover .menu-caption{background:#141016}
+@media(min-width:1100px){
+  main>h1{font-size:clamp(2.1rem,4vw,4.5rem);margin:30px 0 12px}
+  .docs-layout{--menu-width:46%}
+  .docs-layout:not(:has(details[open])){grid-template-columns:minmax(0,var(--menu-width)) minmax(0,1fr);position:relative;min-height:min(65vh,580px)}
+  .docs-layout:not(:has(details[open])) .docs-menu{grid-area:1/1;z-index:1}
+  .docs-layout:not(:has(details[open])) .joker{grid-area:1/2;align-self:center;width:min(92%,560px);justify-self:center}
+  .docs-layout:not(:has(details[open])) .joker::before{inset:-8% -8% 0 -6%;background:linear-gradient(145deg,#c3163d 0 51%,#f8f4f5 51% 75%,#ff2d54 75%);clip-path:polygon(43% 4%,100% 0,92% 52%,25% 98%,4% 78%,19% 51%)}
+  .docs-layout:not(:has(details[open])) .quick-links{grid-area:2/2;justify-self:end}
+  .docs-layout:has(details[open]){--menu-row:calc(var(--card-height) + 11px)}
+  .docs-menu:has(details[open]) summary{width:var(--menu-width)}
+}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--paper)}
+.brand .brand-copy{color:var(--paper)}
+.brand small{display:block;margin-top:3px;color:var(--muted);font-size:.68rem;letter-spacing:.015em;text-transform:none}
+.joker::after{content:"";position:absolute;inset:0 -7% 2% -4%;background:#79304a;clip-path:polygon(49% 2%,100% 5%,93% 54%,31% 100%,15% 87%,28% 85%,85% 48%,91% 12%,46% 11%);z-index:-2}
+@media(prefers-reduced-motion:no-preference){.joker::after{animation:panel-cut 440ms ease-out both}}
+</style>
+</head>
+<body>
+<main>
+<header><a class="brand" href="/" aria-label="Equipment Rental — каталог"><img src="./equipment-rental-logo.svg" width="48" height="48" alt=""><span class="brand-copy"><span>Equipment</span> Rental<small>Аренда для компьютерных клубов</small></span></a><a href="https://github.com/Interlink-Labs/equipment_rental#readme">README ↗</a></header>
+<h1>Документация</h1>
+<div class="docs-layout"><div class="docs-menu">
+<details name="documentation">
+<summary><span class="menu-number" aria-hidden="true">I</span><span>Возможности</span><small class="menu-caption">Разделы системы</small></summary>
+<div class="panel"><h2>Возможности проекта</h2>
+<div class="grid">
+<article><h3>Оборудование</h3><p>Каталог с дневными тарифами и инвентарными номерами.</p></article>
+<article><h3>Клиенты</h3><p>Карточки клиентов с контактными данными.</p></article>
+<article><h3>Аренды</h3><p>Оформление аренды и брони, расчёт стоимости по датам.</p></article>
+<article><h3>Сотрудники</h3><p>Учёт сотрудников и их ролей.</p></article>
+</div>
+<p>В браузере доступен <a href="/">каталог оборудования</a>. Маршруты всех разделов собраны в <a href="/docs">Swagger</a>.</p>
+</div>
+</details>
+<details name="documentation" id="quick-start">
+<summary><span class="menu-number" aria-hidden="true">II</span><span>Быстрый запуск</span><small class="menu-caption">Установка и запуск</small></summary>
+<div class="panel"><h2>Быстрый запуск</h2>
+<p>Откройте терминал в папке проекта и создайте виртуальное окружение.</p>
+<pre><code>python -m venv venv</code></pre>
+<p>Активируйте окружение командой для своего терминала.</p>
+<dl>
+<dt>Windows PowerShell</dt><dd><code>venv\Scripts\Activate.ps1</code></dd>
+<dt>Windows CMD</dt><dd><code>venv\Scripts\activate.bat</code></dd>
+<dt>macOS / Linux</dt><dd><code>source venv/bin/activate</code></dd>
+</dl>
+<p>Установите зависимости и запустите сервер.</p>
+<pre><code>python -m pip install -r requirements.txt
+python main.py</code></pre>
+<p><a href="/">Открыть каталог</a> · <a href="/docs">Открыть Swagger</a></p>
+</div>
+</details>
+<details name="documentation">
+<summary><span class="menu-number" aria-hidden="true">III</span><span>Структура проекта</span><small class="menu-caption">Файлы и модули</small></summary>
+<div class="panel"><h2>Структура проекта</h2>
+<section class="grid" aria-label="Модули проекта">
+    <article><h2>Запуск</h2><p>Точка входа FastAPI и зависимости.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/main.py"><code>main.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/requirements.txt"><code>requirements.txt</code></a></li>
+    </ul></article>
+    <article><h2>Данные</h2><p>SQLite, модели таблиц и проверка данных.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/database.py"><code>database.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/models.py"><code>models.py</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/schemas.py"><code>schemas.py</code></a></li>
+    </ul></article>
+    <article><h2>API</h2><p>Маршруты, расчёт стоимости и проверка дат.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/routers"><code>routers/</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/blob/main/services.py"><code>services.py</code></a></li>
+    </ul></article>
+    <article><h2>Интерфейс</h2><p>Разметка, стили и JavaScript.</p><ul>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/templates"><code>templates/</code></a></li>
+      <li><a href="https://github.com/Interlink-Labs/equipment_rental/tree/main/static"><code>static/</code></a></li>
+    </ul></article>
+  </section>
+</div>
+</details>
+</div>
+<figure class="joker">
+  <img src="./joker.png" alt="Джокер из Persona 5" width="1708" height="1708">
+</figure>
+<nav class="quick-links" aria-label="Быстрые ссылки">
+  <a href="/">Каталог <span aria-hidden="true">↗</span></a>
+  <a href="/docs">Swagger <span aria-hidden="true">↗</span></a>
+  <a href="https://github.com/orgs/Interlink-Labs/projects/6">Команда <span aria-hidden="true">↗</span></a>
+</nav>
+</div>
+</main>
+</body>
+</html>
