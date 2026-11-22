@@ -6,7 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from math import isfinite
-from typing import List, Optional
+from typing import List, Optional, Literal
+from sqlalchemy import text
+from fastapi import Query
 
 from database import get_db
 from auth import require_admin
@@ -19,17 +21,34 @@ router = APIRouter(prefix="/equipment", tags=["Оборудование"])
 @router.get("/", response_model=List[schemas.EquipmentResponse])
 def get_all_equipment(
     status_filter: Optional[str] = None,
-    db: Session = Depends(get_db)
+    query: str = Query("", max_length=150),
+    sort: Literal["id", "name", "price_asc", "price_desc"] = "id",
+    db: Session = Depends(get_db),
 ):
-    """
-    Получить список всех инструментов.
-    Если передан параметр status_filter (напр., ?status_filter=AVAILABLE), возвращаются только подходящие.
-    """
-    query = db.query(models.Equipment)
+    """Публичный каталог: поиск, статус и порядок цен."""
+    items = db.query(models.Equipment).all()
     if status_filter:
-        query = query.filter(models.Equipment.status == status_filter.upper())
-    return query.all()
+        status_filter = status_filter.upper()
+        if status_filter not in {"AVAILABLE", "RENTED", "REPAIR"}:
+            raise HTTPException(422, "Неизвестный статус оборудования")
+        items = [item for item in items if item.status == status_filter]
+    search = query.strip().casefold()
+    if search:
+        items = [item for item in items if search in item.name.casefold()
+                 or search in (item.inventory_number or "").casefold()]
+    if sort == "name":
+        return sorted(items, key=lambda item: (item.name.casefold(), item.id))
+    if sort == "price_asc":
+        return sorted(items, key=lambda item: (item.daily_rate, item.id))
+    if sort == "price_desc":
+        return sorted(items, key=lambda item: (-item.daily_rate, item.id))
+    return sorted(items, key=lambda item: item.id)
 
+
+def lock_equipment(db: Session):
+    """Использовать ту же блокировку SQLite, что и при выдаче аренды."""
+    if db.get_bind().dialect.name == "sqlite":
+        db.execute(text("BEGIN IMMEDIATE"))
 
 @router.get("/{equipment_id}", response_model=schemas.EquipmentResponse)
 def get_equipment_by_id(equipment_id: int, db: Session = Depends(get_db)):
@@ -44,12 +63,13 @@ def get_equipment_by_id(equipment_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=schemas.EquipmentResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_admin)])
-def create_equipment(item: schemas.EquipmentCreate, db: Session = Depends(get_db)):
+def create_equipment(item: schemas.EquipmentCreateValidated, db: Session = Depends(get_db)):
     """
     Добавить новый инструмент в базу.
     Проверяет, чтобы инвентарный номер был уникальным.
     """
     # 1. Проверяем, нет ли уже инструмента с таким инвентарным номером
+    lock_equipment(db)
     existing_item = db.query(models.Equipment).filter(
         models.Equipment.inventory_number == item.inventory_number
     ).first()
@@ -67,7 +87,11 @@ def create_equipment(item: schemas.EquipmentCreate, db: Session = Depends(get_db
         status="AVAILABLE"
     )
     db.add(new_tool)
-    db.commit()          # Записываем изменения в SQLite
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(409, "Инвентарный номер уже используется")
     db.refresh(new_tool) # Считываем созданную запись (вместе со сгенерированным id)
     return new_tool
 
@@ -77,6 +101,7 @@ def update_equipment(
     equipment_id: int, update_data: schemas.EquipmentUpdate, db: Session = Depends(get_db)
 ):
     """Изменить название, тариф или статус инструмента."""
+    lock_equipment(db)
     tool = get_equipment_by_id(equipment_id, db)
     changes = update_data.model_dump(exclude_none=True)
     if "name" in changes:
@@ -91,7 +116,8 @@ def update_equipment(
         changes["status"] = changes["status"].upper()
         if changes["status"] not in {"AVAILABLE", "REPAIR"}:
             raise HTTPException(422, "Допустимые статусы: AVAILABLE и REPAIR")
-        if tool.status == "RENTED":
+        active_rental = db.query(models.Rental).filter_by(equipment_id=equipment_id, status="ACTIVE").first()
+        if tool.status == "RENTED" or active_rental:
             raise HTTPException(409, "Сначала оформите возврат инструмента")
 
     for field, value in changes.items():
@@ -104,6 +130,7 @@ def update_equipment(
 @router.delete("/{equipment_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 def delete_equipment(equipment_id: int, db: Session = Depends(get_db)):
     """Удалить инструмент, если с ним не связаны записи об аренде."""
+    lock_equipment(db)
     tool = get_equipment_by_id(equipment_id, db)
     if tool.status == "RENTED" or tool.rentals:
         raise HTTPException(409, "У инструмента есть записи об аренде")

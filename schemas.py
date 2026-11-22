@@ -136,3 +136,18 @@ class ClientUpdate(BaseModel):
 class ClientCreateValidated(ClientUpdate):
     full_name: str
     phone: str
+
+
+# Пара оборудования — проверка новых записей и изменений.
+class EquipmentCreateValidated(EquipmentCreate):
+    name: str = Field(min_length=1, max_length=150)
+    inventory_number: str = Field(min_length=1, max_length=80)
+    daily_rate: float = Field(gt=0, allow_inf_nan=False)
+
+    @field_validator("name", "inventory_number")
+    @classmethod
+    def trim_required_text(cls, value):
+        value = value.strip()
+        if not value:
+            raise ValueError("Поле не должно быть пустым")
+        return value
