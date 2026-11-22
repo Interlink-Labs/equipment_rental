@@ -73,11 +73,26 @@
         }
     });
 
-    Promise.all([
-        loadOptions('/equipment/', equipment, item => item.name + ' · ' + item.inventory_number, 'Выберите оборудование'),
-        loadOptions('/clients/', client, item => item.full_name, 'Выберите клиента')
-    ]).then(([equipmentCount, clientCount]) => {
-        message.textContent = equipmentCount && clientCount ? '' : 'Для аренды нужны оборудование и клиент.';
-        buttons.forEach(button => { button.disabled = !(equipmentCount && clientCount); });
-    }).catch(error => { message.textContent = error.message; });
+    window.rentalSession.then(async user => {
+        if (!user) {
+            message.textContent = 'Войдите для работы с арендой.';
+            return;
+        }
+        const admin = user.role === 'ADMIN';
+        form.querySelector('button[value="rent"]').hidden = !admin;
+        client.closest('.form-group').hidden = !admin;
+        try {
+            const equipmentCount = await loadOptions('/equipment/', equipment, item => item.name + ' · ' + item.inventory_number, 'Выберите оборудование');
+            let clientCount = 1;
+            if (admin) {
+                clientCount = await loadOptions('/clients/', client, item => item.full_name, 'Выберите клиента');
+            } else {
+                client.replaceChildren(new Option(user.username, user.client_id, true, true));
+            }
+            message.textContent = equipmentCount && clientCount ? '' : 'Для аренды нужны оборудование и клиент.';
+            buttons.forEach(button => { button.disabled = !(equipmentCount && clientCount); });
+        } catch (error) {
+            message.textContent = error.message;
+        }
+    });
 })();

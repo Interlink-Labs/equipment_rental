@@ -15,6 +15,8 @@
     const requests = new WeakMap();
     async function loadRegister(section) {
         if (!section.open) return;
+        const user = await window.rentalSession;
+        if (!user || (section.hasAttribute('data-admin-only') && user.role !== 'ADMIN')) return;
         const key = section.dataset.register;
         const message = section.querySelector(':scope > p[role="status"]');
         const table = section.querySelector('.table-responsive');
@@ -38,7 +40,7 @@
                 columns[key](record).forEach(value => { row.insertCell().textContent = value ?? '—'; });
                 if (key === 'rentals') {
                     const cell = row.insertCell();
-                    if (record.status === 'ACTIVE' || record.status === 'RESERVED') {
+                    if (user.role === 'ADMIN' && (record.status === 'ACTIVE' || record.status === 'RESERVED')) {
                         const button = document.createElement('button');
                         button.type = 'button';
                         button.className = 'btn btn-secondary';
